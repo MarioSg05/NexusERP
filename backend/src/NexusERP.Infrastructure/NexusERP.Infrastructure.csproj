@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\NexusERP.Application\NexusERP.Application.csproj" />
+    <ProjectReference Include="..\NexusERP.Domain\NexusERP.Domain.csproj" />
+    <ProjectReference Include="..\NexusERP.Shared\NexusERP.Shared.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
