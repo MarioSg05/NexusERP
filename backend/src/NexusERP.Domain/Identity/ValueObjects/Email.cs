@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace NexusERP.Domain.ValueObjects;
+namespace NexusERP.Domain.Identity.ValueObjects;
 
 public sealed class Email
 {
