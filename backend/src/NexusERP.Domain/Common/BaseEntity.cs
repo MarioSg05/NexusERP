@@ -22,13 +22,18 @@ public abstract class BaseEntity
         IsDeleted = false;
     }
 
-    public void MarkAsUpdated(string? user = null)
+    protected void SetCreatedBy(string user)
     {
-        UpdatedAt = DateTime.UtcNow;
-        UpdatedBy = user;
+        CreatedBy = user;
     }
 
-    public void MarkAsDeleted()
+    protected void UpdateAudit(string? updatedBy = null)
+    {
+        UpdatedAt = DateTime.UtcNow;
+        UpdatedBy = updatedBy;
+    }
+
+    protected void SoftDelete()
     {
         IsDeleted = true;
         UpdatedAt = DateTime.UtcNow;
