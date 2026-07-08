@@ -31,4 +31,22 @@ public sealed class User : AggregateRoot
 
         IsActive = true;
     }
+    public static User Register(
+    string firstName,
+    string lastName,
+    Email email,
+    PasswordHash passwordHash)
+    {
+        if (string.IsNullOrWhiteSpace(firstName))
+            throw new ArgumentException("First name is required.");
+
+        if (string.IsNullOrWhiteSpace(lastName))
+            throw new ArgumentException("Last name is required.");
+
+        return new User(
+            firstName.Trim(),
+            lastName.Trim(),
+            email,
+            passwordHash);
+    }
 }
