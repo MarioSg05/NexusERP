@@ -39,3 +39,13 @@ Role
 ↓
 
 Permission
+
+## Invariants
+
+### User
+
+- FirstName es obligatorio.
+- LastName es obligatorio.
+- Email es obligatorio y válido.
+- PasswordHash nunca puede ser vacío.
+- Todo usuario tiene identidad única.

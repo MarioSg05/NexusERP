@@ -1,13 +1,18 @@
 namespace NexusERP.Domain.Identity.ValueObjects;
 using NexusERP.Domain.Exceptions;
-public sealed record PasswordHash
+public sealed record PersonName
 {
     public string Value { get; }
 
-    public PasswordHash(string value)
+    public PersonName(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("Password hash cannot be empty.");
+            throw new DomainException("Name cannot be empty.");
+
+        value = value.Trim();
+
+        if (value.Length > 100)
+            throw new DomainException("Name cannot exceed 100 characters.");
 
         Value = value;
     }

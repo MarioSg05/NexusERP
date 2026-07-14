@@ -5,9 +5,9 @@ namespace NexusERP.Domain.Identity.Aggregates;
 
 public sealed class User : AggregateRoot
 {
-    public string FirstName { get; private set; }
+    public PersonName FirstName { get; private set; }
 
-    public string LastName { get; private set; }
+    public PersonName LastName { get; private set; }
 
     public Email Email { get; private set; }
 
@@ -16,8 +16,8 @@ public sealed class User : AggregateRoot
     public bool IsActive { get; private set; }
 
     private User(
-        string firstName,
-        string lastName,
+        PersonName firstName,
+        PersonName lastName,
         Email email,
         PasswordHash passwordHash)
     {
@@ -32,21 +32,52 @@ public sealed class User : AggregateRoot
         IsActive = true;
     }
     public static User Register(
-    string firstName,
-    string lastName,
+    PersonName firstName,
+    PersonName lastName,
     Email email,
     PasswordHash passwordHash)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            throw new ArgumentException("First name is required.");
-
-        if (string.IsNullOrWhiteSpace(lastName))
-            throw new ArgumentException("Last name is required.");
 
         return new User(
-            firstName.Trim(),
-            lastName.Trim(),
+            firstName,
+            lastName,
             email,
             passwordHash);
+    }
+
+    public void ChangeName(PersonName firstName, PersonName lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+
+        UpdateAudit();
+    }
+
+    public void ChangeEmail(Email email)
+    {
+        Email = email;
+
+        UpdateAudit();
+
+    }
+
+    public void Activate()
+    {
+        if (IsActive)
+            return;
+
+        IsActive = true;
+
+        UpdateAudit();
+    }
+
+    public void Deactivate()
+    {
+        if (!IsActive)
+            return;
+
+        IsActive = false;
+
+        UpdateAudit();
     }
 }
