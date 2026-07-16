@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using NexusERP.Application.Common.Interfaces;
 using NexusERP.Infrastructure.Persistence;
 using NexusERP.Infrastructure.Identity.Services;
+using Microsoft.Extensions.Options;
+using NexusERP.Infrastructure.Identity.Jwt;
 
 namespace NexusERP.Infrastructure;
 
@@ -18,6 +20,11 @@ public static class DependencyInjection
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"));
         });
+
+        services.Configure<JwtSettings>(
+          configuration.GetSection(JwtSettings.SectionName));
+
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddScoped<IApplicationDbContext>(
             provider => provider.GetRequiredService<ApplicationDbContext>());
