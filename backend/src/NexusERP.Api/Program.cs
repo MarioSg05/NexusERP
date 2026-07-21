@@ -1,4 +1,6 @@
 using NexusERP.Api.Endpoints.Identity;
+using NexusERP.Api.Endpoints.Customers;
+using NexusERP.Application.Customers.RegisterCustomer;
 using NexusERP.Application.Identity.RegisterUser;
 using NexusERP.Infrastructure;
 using NexusERP.Application.Identity.LoginUser;
@@ -43,6 +45,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 // Application
+builder.Services.AddScoped<RegisterCustomerHandler>();
+
 builder.Services.AddScoped<RegisterUserHandler>();
 
 builder.Services.AddScoped<LoginUserHandler>();
@@ -66,5 +70,7 @@ app.MapRegisterUser();
 app.MapLoginUser();
 
 app.MapMeEndpoint();
+
+app.MapRegisterCustomer();
 
 app.Run();

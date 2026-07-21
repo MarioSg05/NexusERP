@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NexusERP.Application.Common.Interfaces;
+using NexusERP.Domain.Customers.Aggregates;
 using NexusERP.Domain.Identity.Aggregates;
 
 namespace NexusERP.Infrastructure.Persistence;
@@ -14,6 +15,8 @@ public sealed class ApplicationDbContext
     }
 
     public DbSet<User> Users => Set<User>();
+
+    public DbSet<Customer> Customers => Set<Customer>();
 
     public override Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
