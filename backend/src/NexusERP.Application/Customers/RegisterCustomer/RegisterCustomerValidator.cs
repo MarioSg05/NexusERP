@@ -9,16 +9,22 @@ public sealed class RegisterCustomerValidator
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .MaximumLength(200);
+            .WithMessage("Customer name is required.")
+            .MaximumLength(200)
+            .WithMessage("Customer name cannot exceed 200 characters.");
 
         RuleFor(x => x.Email)
             .NotEmpty()
-            .EmailAddress();
+            .WithMessage("Customer email is required.")
+            .EmailAddress()
+            .WithMessage("Customer email is not valid.");
 
         RuleFor(x => x.Phone)
-            .MaximumLength(25);
+            .MaximumLength(25)
+            .WithMessage("Customer phone cannot exceed 25 characters.");
 
         RuleFor(x => x.Type)
-            .IsInEnum();
+            .IsInEnum()
+            .WithMessage("Customer type is invalid.");
     }
 }

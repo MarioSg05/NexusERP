@@ -3,24 +3,30 @@ using NexusERP.Application.Common.Interfaces;
 using NexusERP.Domain.Customers.Aggregates;
 using NexusERP.Domain.Customers.ValueObjects;
 using NexusERP.Domain.Exceptions;
+using FluentValidation;
 
 namespace NexusERP.Application.Customers.RegisterCustomer;
 
 public sealed class RegisterCustomerHandler
 {
     private readonly IApplicationDbContext _context;
+    private readonly RegisterCustomerValidator _validator;
 
-    public RegisterCustomerHandler(IApplicationDbContext context)
+    public RegisterCustomerHandler(
+        IApplicationDbContext context,
+        RegisterCustomerValidator validator)
     {
         _context = context;
+        _validator = validator;
     }
 
     public async Task<RegisterCustomerResponse> Handle(
         RegisterCustomerRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (request is null)
-            throw new DomainException("Request cannot be null.");
+        await _validator.ValidateAndThrowAsync(
+            request,
+            cancellationToken);
 
         var email = new CustomerEmail(request.Email);
 

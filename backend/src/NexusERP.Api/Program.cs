@@ -3,11 +3,14 @@ using NexusERP.Api.Endpoints.Customers;
 using NexusERP.Application.Customers.RegisterCustomer;
 using NexusERP.Api.Endpoints.Products;
 using NexusERP.Application.Products.RegisterProduct;
+using NexusERP.Application.Inventory.CreateInventory;
+using NexusERP.Api.Endpoints.Inventory;
 using NexusERP.Application.Identity.RegisterUser;
 using NexusERP.Infrastructure;
 using NexusERP.Application.Identity.LoginUser;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using NexusERP.Api.Extensions;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +50,14 @@ builder.Services.AddAuthorization();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 // Application
+builder.Services.AddScoped<RegisterCustomerValidator>();
+
+builder.Services.AddScoped<RegisterProductValidator>();
+
+builder.Services.AddScoped<CreateInventoryValidator>();
+
+builder.Services.AddScoped<CreateInventoryHandler>();
+
 builder.Services.AddScoped<RegisterProductHandler>();
 
 builder.Services.AddScoped<RegisterCustomerHandler>();
@@ -63,11 +74,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseGlobalExceptionHandling();
+
+app.UseHttpsRedirection();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.UseHttpsRedirection();
 
 app.MapRegisterUser();
 
@@ -78,5 +91,7 @@ app.MapMeEndpoint();
 app.MapRegisterCustomer();
 
 app.MapRegisterProduct();
+
+app.MapCreateInventory();
 
 app.Run();

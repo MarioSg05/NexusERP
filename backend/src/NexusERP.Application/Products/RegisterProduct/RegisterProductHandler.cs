@@ -1,26 +1,33 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using NexusERP.Application.Common.Interfaces;
 using NexusERP.Domain.Exceptions;
 using NexusERP.Domain.Products.Aggregates;
 using NexusERP.Domain.Products.ValueObjects;
 
+
 namespace NexusERP.Application.Products.RegisterProduct;
 
 public sealed class RegisterProductHandler
 {
     private readonly IApplicationDbContext _context;
+    private readonly RegisterProductValidator _validator;
 
-    public RegisterProductHandler(IApplicationDbContext context)
+    public RegisterProductHandler(
+        IApplicationDbContext context,
+        RegisterProductValidator validator)
     {
         _context = context;
+        _validator = validator;
     }
 
     public async Task<RegisterProductResponse> Handle(
         RegisterProductRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (request is null)
-            throw new DomainException("Request cannot be null.");
+        await _validator.ValidateAndThrowAsync(
+    request,
+    cancellationToken);
 
         var sku = new ProductSku(request.Sku);
 
