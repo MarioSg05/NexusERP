@@ -5,6 +5,8 @@ using NexusERP.Api.Endpoints.Products;
 using NexusERP.Application.Products.RegisterProduct;
 using NexusERP.Application.Inventory.CreateInventory;
 using NexusERP.Api.Endpoints.Inventory;
+using NexusERP.Api.Endpoints.Suppliers;
+using NexusERP.Application.Suppliers.RegisterSupplier;
 using NexusERP.Application.Identity.RegisterUser;
 using NexusERP.Infrastructure;
 using NexusERP.Application.Identity.LoginUser;
@@ -50,6 +52,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 // Application
+builder.Services.AddScoped<RegisterSupplierHandler>();
+
+builder.Services.AddScoped<RegisterSupplierValidator>();
+
 builder.Services.AddScoped<RegisterCustomerValidator>();
 
 builder.Services.AddScoped<RegisterProductValidator>();
@@ -93,5 +99,7 @@ app.MapRegisterCustomer();
 app.MapRegisterProduct();
 
 app.MapCreateInventory();
+
+app.MapRegisterSupplier();
 
 app.Run();

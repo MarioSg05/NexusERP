@@ -4,6 +4,7 @@ using NexusERP.Domain.Customers.Aggregates;
 using NexusERP.Domain.Identity.Aggregates;
 using NexusERP.Domain.Products.Aggregates;
 using NexusERP.Domain.Inventory.Aggregates;
+using NexusERP.Domain.Suppliers.Aggregates;
 
 namespace NexusERP.Infrastructure.Persistence;
 
@@ -19,7 +20,7 @@ public sealed class ApplicationDbContext
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<InventoryItem> Inventories => Set<InventoryItem>();
-
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
     public override Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
     {
