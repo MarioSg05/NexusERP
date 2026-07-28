@@ -30,9 +30,9 @@ public sealed class PurchaseOrderConfiguration
             .IsRequired();
 
         builder.HasMany(x => x.Items)
-    .WithOne()
-    .HasForeignKey("PurchaseOrderId")
-    .IsRequired()
-    .OnDelete(DeleteBehavior.Cascade);
+            .WithOne()
+            .HasForeignKey("PurchaseOrderId")
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

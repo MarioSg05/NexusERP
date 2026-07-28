@@ -25,9 +25,6 @@ public sealed class SupplierConfiguration
             .HasMaxLength(SupplierTaxIdentifier.MaxLength)
             .IsRequired();
 
-        builder.HasIndex(x => x.TaxIdentifier)
-            .IsUnique();
-
         builder.Property(x => x.Email)
             .HasConversion<SupplierEmailConverter>()
             .HasMaxLength(SupplierEmail.MaxLength)
@@ -40,5 +37,9 @@ public sealed class SupplierConfiguration
 
         builder.Property(x => x.IsActive)
             .IsRequired();
+
+        builder.HasIndex(x => x.TaxIdentifier)
+            .IsUnique();
+
     }
 }
