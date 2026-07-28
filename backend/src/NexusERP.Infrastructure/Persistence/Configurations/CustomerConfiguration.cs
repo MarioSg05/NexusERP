@@ -25,9 +25,6 @@ public sealed class CustomerConfiguration
             .HasMaxLength(CustomerEmail.MaxLength)
             .IsRequired();
 
-        builder.HasIndex(x => x.Email)
-            .IsUnique();
-
         builder.Property(x => x.Phone)
             .HasConversion<CustomerPhoneConverter>()
             .HasMaxLength(CustomerPhone.MaxLength)
@@ -39,5 +36,8 @@ public sealed class CustomerConfiguration
 
         builder.Property(x => x.IsActive)
             .IsRequired();
+
+        builder.HasIndex(x => x.Email)
+            .IsUnique();
     }
 }

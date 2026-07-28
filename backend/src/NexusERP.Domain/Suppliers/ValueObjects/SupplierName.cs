@@ -10,21 +10,24 @@ public sealed record SupplierName
 
     public SupplierName(string value)
     {
+        // Validate
         if (string.IsNullOrWhiteSpace(value))
         {
             throw new DomainException(
                 "Supplier name cannot be empty.");
         }
 
-        value = value.Trim();
+        // Normalize
+        var normalizedValue = value.Trim();
 
-        if (value.Length > MaxLength)
+        // Business Rules
+        if (normalizedValue.Length > MaxLength)
         {
             throw new DomainException(
                 $"Supplier name cannot exceed {MaxLength} characters.");
         }
 
-        Value = value;
+        Value = normalizedValue;
     }
 
     public override string ToString() => Value;
