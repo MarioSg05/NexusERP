@@ -1,18 +1,43 @@
-# ADR-003: Project Architecture
+# ADR-003 - Project Architecture
 
-## Estado
+## Status
 
-Aceptado
+Accepted
 
-## Decisión
+---
 
-El proyecto utilizará una combinación de:
+## Context
+
+NexusERP is intended to evolve into a long-term enterprise platform.
+
+The architecture must support maintainability, scalability and a clear separation of responsibilities while remaining simple enough to develop as a Modular Monolith.
+
+---
+
+## Decision
+
+The project adopts the following architectural styles:
 
 - Clean Architecture
-- Domain Driven Design
+- Domain-Driven Design (DDD)
 - Vertical Slice Architecture
 - Modular Monolith
 
-## Justificación
+Each architectural style addresses a different concern and together they provide a balanced foundation for enterprise software development.
 
-Esta combinación permite mantener una alta cohesión por funcionalidad, bajo acoplamiento entre módulos y una evolución natural hacia microservicios si el negocio lo requiere.
+---
+
+## Consequences
+
+Benefits
+
+- Strong separation of concerns.
+- High cohesion within business modules.
+- Low coupling between bounded contexts.
+- Clear dependency direction.
+- Natural evolution toward microservices if business requirements demand it.
+
+Tradeoffs
+
+- Developers must understand multiple architectural concepts.
+- The initial learning curve is higher than a traditional layered application.
