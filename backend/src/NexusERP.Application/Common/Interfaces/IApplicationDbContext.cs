@@ -4,6 +4,7 @@ using NexusERP.Domain.Identity.Aggregates;
 using NexusERP.Domain.Products.Aggregates;
 using NexusERP.Domain.Inventory.Aggregates;
 using NexusERP.Domain.Suppliers.Aggregates;
+using NexusERP.Domain.Purchasing.Aggregates;
 
 namespace NexusERP.Application.Common.Interfaces;
 
@@ -14,5 +15,6 @@ public interface IApplicationDbContext
     DbSet<Product> Products { get; }
     DbSet<InventoryItem> Inventories { get; }
     DbSet<Supplier> Suppliers { get; }
+    DbSet<PurchaseOrder> PurchaseOrders { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

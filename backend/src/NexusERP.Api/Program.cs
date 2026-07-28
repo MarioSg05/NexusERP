@@ -1,15 +1,19 @@
+using NexusERP.Api.Endpoints.Purchasing;
 using NexusERP.Api.Endpoints.Identity;
 using NexusERP.Api.Endpoints.Customers;
-using NexusERP.Application.Customers.RegisterCustomer;
-using NexusERP.Api.Endpoints.Products;
-using NexusERP.Application.Products.RegisterProduct;
-using NexusERP.Application.Inventory.CreateInventory;
 using NexusERP.Api.Endpoints.Inventory;
 using NexusERP.Api.Endpoints.Suppliers;
+using NexusERP.Api.Endpoints.Products;
+
+using NexusERP.Application.Customers.RegisterCustomer;
+using NexusERP.Application.Products.RegisterProduct;
+using NexusERP.Application.Inventory.CreateInventory;
 using NexusERP.Application.Suppliers.RegisterSupplier;
 using NexusERP.Application.Identity.RegisterUser;
-using NexusERP.Infrastructure;
 using NexusERP.Application.Identity.LoginUser;
+using NexusERP.Application.Purchasing.CreatePurchaseOrder;
+
+using NexusERP.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NexusERP.Api.Extensions;
@@ -52,6 +56,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 // Application
+builder.Services.AddScoped<CreatePurchaseOrderHandler>();
+
+builder.Services.AddScoped<CreatePurchaseOrderValidator>();
+
 builder.Services.AddScoped<RegisterSupplierHandler>();
 
 builder.Services.AddScoped<RegisterSupplierValidator>();
@@ -101,5 +109,7 @@ app.MapRegisterProduct();
 app.MapCreateInventory();
 
 app.MapRegisterSupplier();
+
+app.MapCreatePurchaseOrder();
 
 app.Run();
