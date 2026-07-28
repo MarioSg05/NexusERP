@@ -5,6 +5,7 @@ using NexusERP.Domain.Identity.Aggregates;
 using NexusERP.Domain.Products.Aggregates;
 using NexusERP.Domain.Inventory.Aggregates;
 using NexusERP.Domain.Suppliers.Aggregates;
+using NexusERP.Domain.Purchasing.Aggregates;
 
 namespace NexusERP.Infrastructure.Persistence;
 
@@ -18,6 +19,7 @@ public sealed class ApplicationDbContext
     }
     public DbSet<User> Users => Set<User>();
     public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<PurchaseOrder> PurchaseOrders => Set<PurchaseOrder>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<InventoryItem> Inventories => Set<InventoryItem>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
