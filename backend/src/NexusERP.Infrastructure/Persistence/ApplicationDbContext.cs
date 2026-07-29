@@ -6,6 +6,7 @@ using NexusERP.Domain.Products.Aggregates;
 using NexusERP.Domain.Inventory.Aggregates;
 using NexusERP.Domain.Suppliers.Aggregates;
 using NexusERP.Domain.Purchasing.Aggregates;
+using NexusERP.Domain.Sales.Aggregates;
 
 namespace NexusERP.Infrastructure.Persistence;
 
@@ -23,6 +24,7 @@ public sealed class ApplicationDbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<InventoryItem> Inventories => Set<InventoryItem>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<SalesOrder> SalesOrders => Set<SalesOrder>();
     public override Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
     {

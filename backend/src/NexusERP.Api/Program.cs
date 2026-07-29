@@ -13,6 +13,7 @@ using NexusERP.Api.Endpoints.Customers;
 using NexusERP.Api.Endpoints.Inventory;
 using NexusERP.Api.Endpoints.Suppliers;
 using NexusERP.Api.Endpoints.Products;
+using NexusERP.Api.Endpoints.Sales;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +82,7 @@ app.MapRegisterCustomer();
 app.MapRegisterProduct();
 app.MapCreateInventory();
 app.MapRegisterSupplier();
+app.MapCreateSalesOrder();
 
 // Purchasing
 app.MapCreatePurchaseOrder();
