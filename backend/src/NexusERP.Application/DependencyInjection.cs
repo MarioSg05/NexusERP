@@ -7,6 +7,7 @@ using NexusERP.Application.Suppliers.RegisterSupplier;
 using NexusERP.Application.Identity.RegisterUser;
 using NexusERP.Application.Identity.LoginUser;
 using NexusERP.Application.Purchasing.CreatePurchaseOrder;
+using NexusERP.Application.Sales.CreateSalesOrder;
 
 namespace NexusERP.Application;
 
@@ -34,6 +35,10 @@ public static class DependencyInjection
         // Purchasing
         services.AddScoped<CreatePurchaseOrderHandler>();
         services.AddScoped<CreatePurchaseOrderValidator>();
+
+        // Sales
+        services.AddScoped<CreateSalesOrderHandler>();
+        services.AddScoped<CreateSalesOrderValidator>();
 
         // Identity
         services.AddScoped<RegisterUserHandler>();
