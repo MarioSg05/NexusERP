@@ -8,6 +8,10 @@ using NexusERP.Application.Identity.RegisterUser;
 using NexusERP.Application.Identity.LoginUser;
 using NexusERP.Application.Purchasing.CreatePurchaseOrder;
 using NexusERP.Application.Sales.CreateSalesOrder;
+using NexusERP.Application.Reports.GetInventoryReport;
+using NexusERP.Application.Reports.GetLowStockReport;
+using NexusERP.Application.Reports.GetSalesReport;
+using NexusERP.Application.Reports.GetPurchasingReport;
 
 namespace NexusERP.Application;
 
@@ -43,6 +47,12 @@ public static class DependencyInjection
         // Identity
         services.AddScoped<RegisterUserHandler>();
         services.AddScoped<LoginUserHandler>();
+
+        // Reports 
+        services.AddScoped<GetInventoryReportHandler>();
+        services.AddScoped<GetLowStockReportHandler>();
+        services.AddScoped<GetSalesReportHandler>();
+        services.AddScoped<GetPurchasingReportHandler>();
 
         return services;
     }

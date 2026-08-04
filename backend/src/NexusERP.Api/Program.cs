@@ -14,6 +14,7 @@ using NexusERP.Api.Endpoints.Inventory;
 using NexusERP.Api.Endpoints.Suppliers;
 using NexusERP.Api.Endpoints.Products;
 using NexusERP.Api.Endpoints.Sales;
+using NexusERP.Api.Endpoints.Reports;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,5 +87,11 @@ app.MapCreateSalesOrder();
 
 // Purchasing
 app.MapCreatePurchaseOrder();
+
+// Reports
+app.MapGetInventoryReport();
+app.MapGetLowStockReport();
+app.MapGetSalesReport();
+app.MapGetPurchasingReport();
 
 app.Run();
