@@ -6,6 +6,7 @@ using NexusERP.Infrastructure.Persistence;
 using NexusERP.Infrastructure.Identity.Services;
 using Microsoft.Extensions.Options;
 using NexusERP.Infrastructure.Identity.Jwt;
+using NexusERP.Infrastructure.Persistence.Queries;
 
 namespace NexusERP.Infrastructure;
 
@@ -28,6 +29,8 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationDbContext>(
             provider => provider.GetRequiredService<ApplicationDbContext>());
+
+        services.AddScoped<IReportQueries, ReportQueries>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
