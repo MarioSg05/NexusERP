@@ -91,9 +91,9 @@ public sealed class ReportQueries : IReportQueries
                     CustomerId,
                     OrderDate,
                     CASE Status
-                        WHEN 0 THEN 'Pending'
-                        WHEN 1 THEN 'Confirmed'
-                        WHEN 2 THEN 'Cancelled'
+                        WHEN 1 THEN 'Pending'
+                        WHEN 2 THEN 'Confirmed'
+                        WHEN 3 THEN 'Cancelled'
                         ELSE 'Unknown'
                     END AS Status,
                     Total
@@ -114,9 +114,9 @@ public sealed class ReportQueries : IReportQueries
                 CustomerId,
                 OrderDate,
                 CASE Status
-                    WHEN 0 THEN 'Pending'
-                    WHEN 1 THEN 'Confirmed'
-                    WHEN 2 THEN 'Cancelled'
+                    WHEN 1 THEN 'Pending'
+                    WHEN 2 THEN 'Confirmed'
+                    WHEN 3 THEN 'Cancelled'
                     ELSE 'Unknown'
                 END AS Status,
                 Total
@@ -138,9 +138,9 @@ public sealed class ReportQueries : IReportQueries
                 CustomerId,
                 OrderDate,
                 CASE Status
-                    WHEN 0 THEN 'Pending'
-                    WHEN 1 THEN 'Confirmed'
-                    WHEN 2 THEN 'Cancelled'
+                    WHEN 1 THEN 'Pending'
+                    WHEN 2 THEN 'Confirmed'
+                    WHEN 3 THEN 'Cancelled'
                     ELSE 'Unknown'
                 END AS Status,
                 Total
@@ -162,9 +162,9 @@ public sealed class ReportQueries : IReportQueries
                 CustomerId,
                 OrderDate,
                 CASE Status
-                    WHEN 0 THEN 'Pending'
-                    WHEN 1 THEN 'Confirmed'
-                    WHEN 2 THEN 'Cancelled'
+                    WHEN 1 THEN 'Pending'
+                    WHEN 2 THEN 'Confirmed'
+                    WHEN 3 THEN 'Cancelled'
                     ELSE 'Unknown'
                 END AS Status,
                 Total

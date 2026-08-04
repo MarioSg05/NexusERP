@@ -32,6 +32,8 @@ public static class DependencyInjection
 
         services.AddScoped<IReportQueries, ReportQueries>();
 
+        services.AddScoped<IDashboardQueries, DashboardQueries>();
+
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
         return services;
