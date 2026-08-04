@@ -12,6 +12,7 @@ using NexusERP.Application.Reports.GetInventoryReport;
 using NexusERP.Application.Reports.GetLowStockReport;
 using NexusERP.Application.Reports.GetSalesReport;
 using NexusERP.Application.Reports.GetPurchasingReport;
+using NexusERP.Application.Dashboard.GetDashboard;
 
 namespace NexusERP.Application;
 
@@ -53,6 +54,9 @@ public static class DependencyInjection
         services.AddScoped<GetLowStockReportHandler>();
         services.AddScoped<GetSalesReportHandler>();
         services.AddScoped<GetPurchasingReportHandler>();
+
+        // Dashboard 
+        services.AddScoped<GetDashboardHandler>();
 
         return services;
     }
