@@ -57,6 +57,20 @@ builder.Services.AddInfrastructure(builder.Configuration);
 // Application
 builder.Services.AddApplication();
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "Frontend",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -73,6 +87,8 @@ app.MapMeEndpoint();
 app.UseGlobalExceptionHandling();
 
 app.UseHttpsRedirection();
+
+app.UseCors("Frontend");
 
 app.UseAuthentication();
 
