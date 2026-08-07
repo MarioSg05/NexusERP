@@ -1,34 +1,33 @@
-import { useEffect, useState } from "react";
+import { useDashboard } from "../hooks/useDashboard";
 
-import type { Dashboard } from "../models/DashboardModel";
-import { getDashboard } from "../services/dashboardService";
-
+import { DashboardHeader } from "../components/DashboardHeader/DashboardHeader";
 import { DashboardKpiCard } from "../components/DashboardKpiCard/DashboardKpiCard";
 import { DashboardSummaryCard } from "../components/DashboardSummaryCard/DashboardSummaryCard";
-import { DashboardHeader } from "../components/DashboardHeader/DashboardHeader";
+import { DashboardSkeleton } from "../components/DashboardSkeleton/DashboardSkeleton";
+import { DashboardError } from "../components/DashboardError/DashboardError";
 
 export function DashboardPage() {
-    const [dashboard, setDashboard] = useState<Dashboard | null>(null);
+    const { data: dashboard, isLoading, error, refetch } = useDashboard();
 
-    useEffect(() => {
-        async function loadDashboard() {
-            const data = await getDashboard();
+    if (isLoading) {
+        return <DashboardSkeleton />;
+    }
 
-            setDashboard(data);
-        }
-
-        loadDashboard();
-    }, []);
-
-    if (!dashboard) {
-        return <p>Loading dashboard...</p>;
+    if (error || !dashboard) {
+        return (
+            <DashboardError
+                onRetry={() => {
+                    void refetch();
+                }}
+            />
+        );
     }
 
     return (
         <>
             <DashboardHeader />
 
-            <section className="grid grid-cols-3 gap-6">
+            <section className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 <DashboardKpiCard
                     title="Products"
                     value={dashboard.inventory.totalProducts}
@@ -45,7 +44,7 @@ export function DashboardPage() {
                 />
             </section>
 
-            <div className="mt-8 grid grid-cols-3 gap-6">
+            <div className="mt-8 space-y-6">
                 <DashboardSummaryCard
                     title="Inventory"
                     items={[

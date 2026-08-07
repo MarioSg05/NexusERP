@@ -4,7 +4,7 @@ import { navigationItems } from "./navigation";
 
 export function Sidebar() {
   return (
-    <aside className="flex h-[calc(100vh-64px)] w-64 flex-col border-r border-slate-800 bg-slate-900">
+    <aside className="flex w-64 flex-col border-r border-slate-800 bg-slate-900">
       <nav className="flex flex-1 flex-col py-4">
         {navigationItems.map((item) => {
           const Icon = item.icon;
