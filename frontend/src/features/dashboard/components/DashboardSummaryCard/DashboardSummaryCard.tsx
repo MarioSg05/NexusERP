@@ -21,11 +21,11 @@ export function DashboardSummaryCard({
             key={item.label}
             className="flex items-center justify-between"
           >
-            <span className="text-slate-500">
+            <span className="text-sm text-slate-500">
               {item.label}
             </span>
 
-            <span className="font-semibold text-slate-900">
+            <span className="text-lg font-semibold text-slate-900">
               {item.value}
             </span>
           </div>
