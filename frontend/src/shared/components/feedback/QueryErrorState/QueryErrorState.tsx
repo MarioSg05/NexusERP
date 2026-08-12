@@ -1,12 +1,19 @@
-import { AlertCircle, RefreshCw } from "lucide-react";
+import {
+  AlertCircle,
+  RefreshCw,
+} from "lucide-react";
 
-interface DashboardErrorProps {
+interface QueryErrorStateProps {
+  title: string;
+  description: string;
   onRetry: () => void;
 }
 
-export function DashboardError({
+export function QueryErrorState({
+  title,
+  description,
   onRetry,
-}: DashboardErrorProps) {
+}: QueryErrorStateProps) {
   return (
     <div
       role="alert"
@@ -17,12 +24,11 @@ export function DashboardError({
       </div>
 
       <h2 className="mt-4 text-lg font-semibold text-slate-900">
-        Unable to load dashboard
+        {title}
       </h2>
 
       <p className="mt-2 max-w-md text-sm text-slate-500">
-        We couldn't retrieve the latest dashboard information.
-        Check your connection and try again.
+        {description}
       </p>
 
       <button
@@ -31,7 +37,6 @@ export function DashboardError({
         className="mt-6 flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800"
       >
         <RefreshCw size={16} />
-
         Try again
       </button>
     </div>
