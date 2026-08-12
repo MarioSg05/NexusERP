@@ -16,6 +16,9 @@ using NexusERP.Application.Dashboard.GetDashboard;
 using NexusERP.Application.Customers.GetCustomers;
 using NexusERP.Application.Customers.GetCustomerById;
 using NexusERP.Application.Customers.UpdateCustomer;
+using NexusERP.Application.Products.GetProducts;
+using NexusERP.Application.Products.GetProductById;
+using NexusERP.Application.Products.UpdateProduct;
 
 namespace NexusERP.Application;
 
@@ -37,6 +40,12 @@ public static class DependencyInjection
         // Products
         services.AddScoped<RegisterProductHandler>();
         services.AddScoped<RegisterProductValidator>();
+
+        services.AddScoped<GetProductsHandler>();
+        services.AddScoped<GetProductByIdHandler>();
+
+        services.AddScoped<UpdateProductHandler>();
+        services.AddScoped<UpdateProductValidator>();
 
         // Inventory
         services.AddScoped<CreateInventoryHandler>();

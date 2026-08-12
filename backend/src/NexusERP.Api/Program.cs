@@ -100,7 +100,12 @@ app.MapRegisterCustomer();
 app.MapGetCustomers();
 app.MapGetCustomerById();
 app.MapUpdateCustomer();
+
 app.MapRegisterProduct();
+app.MapGetProducts();
+app.MapGetProductById();
+app.MapUpdateProduct();
+
 app.MapCreateInventory();
 app.MapRegisterSupplier();
 app.MapCreateSalesOrder();
