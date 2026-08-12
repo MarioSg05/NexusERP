@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NexusERP.Domain.Exceptions;
 using FluentValidation;
+using NexusERP.Application.Common.Exceptions;
 
 namespace NexusERP.Api.Middleware;
 
@@ -25,16 +26,43 @@ public sealed class ExceptionHandlingMiddleware
         }
         catch (ValidationException exception)
         {
-            await HandleValidationException(context, exception);
+            await HandleValidationException(
+                context,
+                exception);
+        }
+        catch (NotFoundException exception)
+        {
+            await HandleNotFoundException(
+                context,
+                exception);
         }
         catch (DomainException exception)
         {
-            await HandleDomainException(context, exception);
+            await HandleDomainException(
+                context,
+                exception);
         }
         catch (Exception exception)
         {
-            await HandleUnexpectedException(context, exception);
+            await HandleUnexpectedException(
+                context,
+                exception);
         }
+    }
+
+    private async Task HandleNotFoundException(
+    HttpContext context,
+    NotFoundException exception)
+    {
+        _logger.LogWarning(
+            exception,
+            exception.Message);
+
+        await WriteProblem(
+            context,
+            StatusCodes.Status404NotFound,
+            "Resource Not Found",
+            exception.Message);
     }
 
     private async Task HandleValidationException(
@@ -106,5 +134,5 @@ public sealed class ExceptionHandlingMiddleware
             "An unexpected error occurred.");
     }
 
-    
+
 }

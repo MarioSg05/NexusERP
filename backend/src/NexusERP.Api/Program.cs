@@ -97,6 +97,9 @@ app.UseAuthorization();
 
 // Sales Master Data
 app.MapRegisterCustomer();
+app.MapGetCustomers();
+app.MapGetCustomerById();
+app.MapUpdateCustomer();
 app.MapRegisterProduct();
 app.MapCreateInventory();
 app.MapRegisterSupplier();
