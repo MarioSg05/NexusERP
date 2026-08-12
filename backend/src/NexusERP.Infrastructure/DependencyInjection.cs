@@ -38,6 +38,8 @@ public static class DependencyInjection
 
         services.AddScoped<ICustomerQueries, CustomerQueries>();
 
+        services.AddScoped<IProductQueries, ProductQueries>();
+
         return services;
     }
 }
