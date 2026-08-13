@@ -19,6 +19,10 @@ using NexusERP.Application.Customers.UpdateCustomer;
 using NexusERP.Application.Products.GetProducts;
 using NexusERP.Application.Products.GetProductById;
 using NexusERP.Application.Products.UpdateProduct;
+using NexusERP.Application.Inventory.GetInventory;
+using NexusERP.Application.Inventory.IncreaseInventoryStock;
+using NexusERP.Application.Inventory.AdjustInventoryStock;
+using NexusERP.Application.Inventory.DecreaseInventoryStock;
 
 namespace NexusERP.Application;
 
@@ -50,6 +54,17 @@ public static class DependencyInjection
         // Inventory
         services.AddScoped<CreateInventoryHandler>();
         services.AddScoped<CreateInventoryValidator>();
+
+        services.AddScoped<GetInventoryHandler>();
+
+        services.AddScoped<IncreaseInventoryStockHandler>();
+        services.AddScoped<IncreaseInventoryStockValidator>();
+
+        services.AddScoped<DecreaseInventoryStockHandler>();
+        services.AddScoped<DecreaseInventoryStockValidator>();
+
+        services.AddScoped<AdjustInventoryStockHandler>();
+        services.AddScoped<AdjustInventoryStockValidator>();
 
         // Suppliers
         services.AddScoped<RegisterSupplierHandler>();
