@@ -35,6 +35,20 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
             label: "New Product",
         },
     ],
+    "/inventory": [
+        {
+            label: "Inventory",
+        },
+    ],
+    "/inventory/new": [
+        {
+            label: "Inventory",
+            href: "/inventory",
+        },
+        {
+            label: "Create Inventory",
+        },
+    ],
 };
 
 export function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {

@@ -107,6 +107,11 @@ app.MapGetProductById();
 app.MapUpdateProduct();
 
 app.MapCreateInventory();
+app.MapGetInventory();
+app.MapIncreaseInventoryStock();
+app.MapDecreaseInventoryStock();
+app.MapAdjustInventoryStock();
+
 app.MapRegisterSupplier();
 app.MapCreateSalesOrder();
 

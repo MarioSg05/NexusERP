@@ -10,6 +10,9 @@ import { NewProductPage } from "../../features/products/pages/NewProductPage";
 import { EditProductPage } from "../../features/products/pages/EditProductPage";
 import { ProductsPage } from "../../features/products/pages/ProductsPage";
 
+import { InventoryPage } from "../../features/inventory/pages/InventoryPage";
+import { CreateInventoryPage } from "../../features/inventory/pages/CreateInventoryPage";
+
 import { AppLayout } from "../../shared/layouts/AppLayout";
 
 export function AppRouter() {
@@ -35,6 +38,13 @@ export function AppRouter() {
                     <Route
                         path="products/:id/edit"
                         element={<EditProductPage />}
+                    />
+
+                    <Route path="inventory" element={<InventoryPage />} />
+                    
+                    <Route
+                        path="inventory/new"
+                        element={<CreateInventoryPage />}
                     />
                 </Route>
             </Routes>
