@@ -56,6 +56,17 @@ public sealed class PurchaseOrder : AggregateRoot
 
         EnsurePending();
 
+        var productAlreadyExists =
+            _items.Any(
+                existingItem =>
+                    existingItem.ProductId == item.ProductId);
+
+        if (productAlreadyExists)
+        {
+            throw new DomainException(
+                "A product can only appear once in a purchase order.");
+        }
+
         _items.Add(item);
 
         RecalculateTotal();

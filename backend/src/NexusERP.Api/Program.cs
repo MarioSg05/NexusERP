@@ -113,10 +113,16 @@ app.MapDecreaseInventoryStock();
 app.MapAdjustInventoryStock();
 
 app.MapRegisterSupplier();
+app.MapGetSuppliers();
+
 app.MapCreateSalesOrder();
 
 // Purchasing
 app.MapCreatePurchaseOrder();
+app.MapGetPurchaseOrders();
+app.MapGetPurchaseOrderById();
+app.MapApprovePurchaseOrder();
+app.MapCancelPurchaseOrder();
 
 // Reports
 app.MapGetInventoryReport();

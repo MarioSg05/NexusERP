@@ -13,6 +13,10 @@ import { ProductsPage } from "../../features/products/pages/ProductsPage";
 import { InventoryPage } from "../../features/inventory/pages/InventoryPage";
 import { CreateInventoryPage } from "../../features/inventory/pages/CreateInventoryPage";
 
+import { PurchasingPage } from "../../features/purchasing/pages/PurchasingPage";
+import { PurchaseOrderDetailPage } from "../../features/purchasing/pages/PurchaseOrderDetailPage";
+import { NewPurchaseOrderPage } from "../../features/purchasing/pages/NewPurchaseOrderPage";
+
 import { AppLayout } from "../../shared/layouts/AppLayout";
 
 export function AppRouter() {
@@ -41,10 +45,22 @@ export function AppRouter() {
                     />
 
                     <Route path="inventory" element={<InventoryPage />} />
-                    
+
                     <Route
                         path="inventory/new"
                         element={<CreateInventoryPage />}
+                    />
+
+                    <Route path="purchasing" element={<PurchasingPage />} />
+
+                    <Route
+                        path="purchasing/new"
+                        element={<NewPurchaseOrderPage />}
+                    />
+
+                    <Route
+                        path="purchasing/:id"
+                        element={<PurchaseOrderDetailPage />}
                     />
                 </Route>
             </Routes>
