@@ -116,6 +116,10 @@ app.MapRegisterSupplier();
 app.MapGetSuppliers();
 
 app.MapCreateSalesOrder();
+app.MapGetSalesOrders();
+app.MapGetSalesOrderById();
+app.MapConfirmSalesOrder();
+app.MapCancelSalesOrder();
 
 // Purchasing
 app.MapCreatePurchaseOrder();

@@ -56,12 +56,24 @@ public sealed class SalesOrder : AggregateRoot
 
         EnsurePending();
 
+        var productAlreadyExists =
+            _items.Any(
+                existingItem =>
+                    existingItem.ProductId == item.ProductId);
+
+        if (productAlreadyExists)
+        {
+            throw new DomainException(
+                "A product can only appear once in a sales order.");
+        }
+
         _items.Add(item);
 
         RecalculateTotal();
 
         UpdateAudit();
     }
+    
 
     public void RemoveItem(Guid itemId)
     {
@@ -129,4 +141,5 @@ public sealed class SalesOrder : AggregateRoot
         Total = new SalesOrderTotal(
             _items.Sum(x => x.LineTotal.Value));
     }
+    
 }
