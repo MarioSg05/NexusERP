@@ -46,6 +46,8 @@ public static class DependencyInjection
 
         services.AddScoped<IPurchasingQueries, PurchasingQueries>();
 
+        services.AddScoped<ISalesQueries, SalesQueries>();
+
         return services;
     }
 }

@@ -63,6 +63,20 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
             label: "New Purchase Order",
         },
     ],
+    "/sales": [
+        {
+            label: "Sales",
+        },
+    ],
+    "/sales/new": [
+        {
+            label: "Sales",
+            href: "/sales",
+        },
+        {
+            label: "New Sales Order",
+        },
+    ],
 };
 
 export function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {
@@ -98,6 +112,18 @@ export function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {
             },
             {
                 label: "Purchase Order",
+            },
+        ];
+    }
+
+    if (pathname.startsWith("/sales/") && pathname !== "/sales/new") {
+        return [
+            {
+                label: "Sales",
+                href: "/sales",
+            },
+            {
+                label: "Sales Order",
             },
         ];
     }

@@ -17,6 +17,10 @@ import { PurchasingPage } from "../../features/purchasing/pages/PurchasingPage";
 import { PurchaseOrderDetailPage } from "../../features/purchasing/pages/PurchaseOrderDetailPage";
 import { NewPurchaseOrderPage } from "../../features/purchasing/pages/NewPurchaseOrderPage";
 
+import { SalesPage } from "../../features/sales/pages/SalesPage";
+import { SalesOrderDetailPage } from "../../features/sales/pages/SalesOrderDetailPage";
+import { NewSalesOrderPage } from "../../features/sales/pages/NewSalesOrderPage";
+
 import { AppLayout } from "../../shared/layouts/AppLayout";
 
 export function AppRouter() {
@@ -61,6 +65,15 @@ export function AppRouter() {
                     <Route
                         path="purchasing/:id"
                         element={<PurchaseOrderDetailPage />}
+                    />
+
+                    <Route path="sales" element={<SalesPage />} />
+
+                    <Route path="sales/new" element={<NewSalesOrderPage />} />
+
+                    <Route
+                        path="sales/:id"
+                        element={<SalesOrderDetailPage />}
                     />
                 </Route>
             </Routes>

@@ -28,6 +28,10 @@ using NexusERP.Application.Purchasing.GetPurchaseOrders;
 using NexusERP.Application.Purchasing.GetPurchaseOrderById;
 using NexusERP.Application.Purchasing.ApprovePurchaseOrder;
 using NexusERP.Application.Purchasing.CancelPurchaseOrder;
+using NexusERP.Application.Sales.ConfirmSalesOrder;
+using NexusERP.Application.Sales.CancelSalesOrder;
+using NexusERP.Application.Sales.GetSalesOrderById;
+using NexusERP.Application.Sales.GetSalesOrders;
 
 namespace NexusERP.Application;
 
@@ -89,6 +93,12 @@ public static class DependencyInjection
         // Sales
         services.AddScoped<CreateSalesOrderHandler>();
         services.AddScoped<CreateSalesOrderValidator>();
+
+        services.AddScoped<ConfirmSalesOrderHandler>();
+        services.AddScoped<CancelSalesOrderHandler>();
+
+        services.AddScoped<GetSalesOrdersHandler>();
+        services.AddScoped<GetSalesOrderByIdHandler>();
 
         // Identity
         services.AddScoped<RegisterUserHandler>();
