@@ -42,6 +42,10 @@ public static class DependencyInjection
 
         services.AddScoped<IInventoryQueries, InventoryQueries>();
 
+        services.AddScoped<ISupplierQueries, SupplierQueries>();
+
+        services.AddScoped<IPurchasingQueries, PurchasingQueries>();
+
         return services;
     }
 }

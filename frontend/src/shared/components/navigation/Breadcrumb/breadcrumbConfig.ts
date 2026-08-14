@@ -49,6 +49,20 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
             label: "Create Inventory",
         },
     ],
+    "/purchasing": [
+        {
+            label: "Purchasing",
+        },
+    ],
+    "/purchasing/new": [
+        {
+            label: "Purchasing",
+            href: "/purchasing",
+        },
+        {
+            label: "New Purchase Order",
+        },
+    ],
 };
 
 export function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {
@@ -72,6 +86,18 @@ export function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {
             },
             {
                 label: "Edit Product",
+            },
+        ];
+    }
+
+    if (pathname.startsWith("/purchasing/") && pathname !== "/purchasing/new") {
+        return [
+            {
+                label: "Purchasing",
+                href: "/purchasing",
+            },
+            {
+                label: "Purchase Order",
             },
         ];
     }

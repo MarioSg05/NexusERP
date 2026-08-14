@@ -23,6 +23,11 @@ using NexusERP.Application.Inventory.GetInventory;
 using NexusERP.Application.Inventory.IncreaseInventoryStock;
 using NexusERP.Application.Inventory.AdjustInventoryStock;
 using NexusERP.Application.Inventory.DecreaseInventoryStock;
+using NexusERP.Application.Suppliers.GetSuppliers;
+using NexusERP.Application.Purchasing.GetPurchaseOrders;
+using NexusERP.Application.Purchasing.GetPurchaseOrderById;
+using NexusERP.Application.Purchasing.ApprovePurchaseOrder;
+using NexusERP.Application.Purchasing.CancelPurchaseOrder;
 
 namespace NexusERP.Application;
 
@@ -70,9 +75,16 @@ public static class DependencyInjection
         services.AddScoped<RegisterSupplierHandler>();
         services.AddScoped<RegisterSupplierValidator>();
 
+        services.AddScoped<GetSuppliersHandler>();
+        services.AddScoped<GetPurchaseOrdersHandler>();
+
         // Purchasing
         services.AddScoped<CreatePurchaseOrderHandler>();
         services.AddScoped<CreatePurchaseOrderValidator>();
+
+        services.AddScoped<GetPurchaseOrderByIdHandler>();
+        services.AddScoped<ApprovePurchaseOrderHandler>();
+        services.AddScoped<CancelPurchaseOrderHandler>();
 
         // Sales
         services.AddScoped<CreateSalesOrderHandler>();
