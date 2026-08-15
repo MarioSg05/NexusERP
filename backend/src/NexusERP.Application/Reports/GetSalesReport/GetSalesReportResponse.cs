@@ -6,6 +6,8 @@ public sealed class GetSalesReportResponse
 
     public Guid CustomerId { get; init; }
 
+    public string CustomerName { get; init; } = string.Empty;
+
     public DateTime OrderDate { get; init; }
 
     public string Status { get; init; } = string.Empty;

@@ -11,12 +11,13 @@ public static class GetLowStockReportEndpoint
         app.MapGet(
             "/api/reports/low-stock",
             async (
-                int minimumStock,
+                int? minimumStock,
                 [FromServices] GetLowStockReportHandler handler,
                 CancellationToken cancellationToken) =>
             {
                 var request =
-                    new GetLowStockReportRequest(minimumStock);
+                    new GetLowStockReportRequest(
+                        minimumStock ?? 10);
 
                 var response =
                     await handler.Handle(
@@ -28,7 +29,8 @@ public static class GetLowStockReportEndpoint
 
         .WithName("GetLowStockReport")
         .WithSummary("Gets products with low stock.")
-        .WithDescription("Returns products whose inventory is less than or equal to the specified minimum stock.")
+        .WithDescription(
+            "Returns products whose inventory is less than or equal to the specified minimum stock. Defaults to 10 when no threshold is provided.")
         .Produces<IReadOnlyCollection<GetLowStockReportResponse>>(
             StatusCodes.Status200OK);
 
