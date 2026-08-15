@@ -77,6 +77,41 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
             label: "New Sales Order",
         },
     ],
+    "/reports/inventory": [
+        {
+            label: "Reports",
+        },
+        {
+            label: "Inventory",
+        },
+    ],
+
+    "/reports/low-stock": [
+        {
+            label: "Reports",
+        },
+        {
+            label: "Low Stock",
+        },
+    ],
+
+    "/reports/sales": [
+        {
+            label: "Reports",
+        },
+        {
+            label: "Sales",
+        },
+    ],
+
+    "/reports/purchasing": [
+        {
+            label: "Reports",
+        },
+        {
+            label: "Purchasing",
+        },
+    ],
 };
 
 export function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {

@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { CustomersPage } from "../../features/customers/pages/CustomersPage";
 import { EditCustomerPage } from "../../features/customers/pages/EditCustomerPage";
@@ -20,6 +21,12 @@ import { NewPurchaseOrderPage } from "../../features/purchasing/pages/NewPurchas
 import { SalesPage } from "../../features/sales/pages/SalesPage";
 import { SalesOrderDetailPage } from "../../features/sales/pages/SalesOrderDetailPage";
 import { NewSalesOrderPage } from "../../features/sales/pages/NewSalesOrderPage";
+
+import { ReportsLayout } from "../../features/reports/components/ReportsLayout/ReportsLayout";
+import { InventoryReportPage } from "../../features/reports/pages/InventoryReportPage";
+import { LowStockReportPage } from "../../features/reports/pages/LowStockReportPage";
+import { PurchasingReportPage } from "../../features/reports/pages/PurchasingReportPage";
+import { SalesReportPage } from "../../features/reports/pages/SalesReportPage";
 
 import { AppLayout } from "../../shared/layouts/AppLayout";
 
@@ -75,6 +82,30 @@ export function AppRouter() {
                         path="sales/:id"
                         element={<SalesOrderDetailPage />}
                     />
+
+                    <Route path="reports" element={<ReportsLayout />}>
+                        <Route
+                            index
+                            element={<Navigate to="inventory" replace />}
+                        />
+
+                        <Route
+                            path="inventory"
+                            element={<InventoryReportPage />}
+                        />
+
+                        <Route
+                            path="low-stock"
+                            element={<LowStockReportPage />}
+                        />
+
+                        <Route path="sales" element={<SalesReportPage />} />
+
+                        <Route
+                            path="purchasing"
+                            element={<PurchasingReportPage />}
+                        />
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter>
