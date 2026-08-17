@@ -1,13 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+
 using NexusERP.Application.Common.Interfaces;
+using NexusERP.Application.Common.Models;
 
 namespace NexusERP.Infrastructure.Identity.Jwt;
 
-public sealed class JwtTokenGenerator : IJwtTokenGenerator
+public sealed class JwtTokenGenerator
+    : IJwtTokenGenerator
 {
     private readonly JwtSettings _settings;
 
@@ -17,25 +21,32 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
         _settings = options.Value;
     }
 
-    public string GenerateToken(
+    public JwtTokenResult GenerateToken(
         Guid userId,
         string email)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, email)
+            new Claim(
+                JwtRegisteredClaimNames.Sub,
+                userId.ToString()),
+
+            new Claim(
+                JwtRegisteredClaimNames.Email,
+                email)
         };
 
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_settings.Key));
+        var key =
+            new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    _settings.Key));
 
         var credentials =
             new SigningCredentials(
                 key,
                 SecurityAlgorithms.HmacSha256);
 
-        var expires =
+        var expiresAt =
             DateTime.UtcNow.AddMinutes(
                 _settings.ExpirationMinutes);
 
@@ -44,10 +55,15 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
                 issuer: _settings.Issuer,
                 audience: _settings.Audience,
                 claims: claims,
-                expires: expires,
+                expires: expiresAt,
                 signingCredentials: credentials);
 
-        return new JwtSecurityTokenHandler()
-            .WriteToken(token);
+        var accessToken =
+            new JwtSecurityTokenHandler()
+                .WriteToken(token);
+
+        return new JwtTokenResult(
+            accessToken,
+            expiresAt);
     }
 }

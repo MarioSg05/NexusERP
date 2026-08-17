@@ -1,5 +1,7 @@
-using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
+using NexusERP.Application.Identity.GetCurrentUser;
 
 namespace NexusERP.Api.Endpoints.Identity;
 
@@ -10,27 +12,43 @@ public static class MeEndpoint
     {
         app.MapGet(
             "/api/auth/me",
-            (ClaimsPrincipal user) =>
+            async (
+                ClaimsPrincipal user,
+                GetCurrentUserHandler handler,
+                CancellationToken cancellationToken) =>
             {
-                var userId =
-                    user.FindFirstValue(ClaimTypes.NameIdentifier)
-                    ?? user.FindFirstValue(JwtRegisteredClaimNames.Sub);
+                var userIdValue =
+                    user.FindFirstValue(
+                        ClaimTypes.NameIdentifier)
+                    ?? user.FindFirstValue(
+                        JwtRegisteredClaimNames.Sub);
 
-                var email =
-                    user.FindFirstValue(ClaimTypes.Email)
-                    ?? user.FindFirstValue(JwtRegisteredClaimNames.Email);
-
-                return Results.Ok(new
+                if (!Guid.TryParse(
+                    userIdValue,
+                    out var userId))
                 {
-                    UserId = userId,
-                    Email = email
-                });
+                    return Results.Unauthorized();
+                }
+
+                var response =
+                    await handler.Handle(
+                        userId,
+                        cancellationToken);
+
+                return Results.Ok(response);
             })
         .RequireAuthorization()
         .WithName("Me")
-        .WithSummary("Returns the authenticated user.")
-        .Produces(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status401Unauthorized);
+        .WithSummary(
+            "Returns the authenticated user.")
+        .WithDescription(
+            "Returns the current active user represented by the authenticated JWT.")
+        .Produces<GetCurrentUserResponse>(
+            StatusCodes.Status200OK)
+        .Produces(
+            StatusCodes.Status401Unauthorized)
+        .Produces(
+            StatusCodes.Status404NotFound);
 
         return app;
     }

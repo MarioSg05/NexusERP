@@ -16,6 +16,7 @@ using NexusERP.Api.Endpoints.Products;
 using NexusERP.Api.Endpoints.Sales;
 using NexusERP.Api.Endpoints.Reports;
 using NexusERP.Api.Endpoints.Dashboard;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,8 +49,14 @@ builder.Services
             };
     });
 
-// Authentication
-builder.Services.AddAuthorization();
+// Authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy =
+        new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .Build();
+});
 
 // Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration);

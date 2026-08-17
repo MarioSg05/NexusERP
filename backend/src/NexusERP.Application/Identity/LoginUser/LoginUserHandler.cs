@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+
+using NexusERP.Application.Common.Exceptions;
 using NexusERP.Application.Common.Interfaces;
-using NexusERP.Domain.Exceptions;
+using NexusERP.Domain.Identity.ValueObjects;
 
 namespace NexusERP.Application.Identity.LoginUser;
 
@@ -24,15 +26,20 @@ public sealed class LoginUserHandler
         LoginUserRequest request,
         CancellationToken cancellationToken = default)
     {
-        var email = new Domain.Identity.ValueObjects.Email(request.Email);
+        var email =
+            new Email(request.Email);
 
-        var user = await _context.Users
-            .FirstOrDefaultAsync(
-                x => x.Email == email,
-                cancellationToken);
+        var user =
+            await _context.Users
+                .FirstOrDefaultAsync(
+                    x => x.Email == email,
+                    cancellationToken);
 
         if (user is null)
-            throw new DomainException("Invalid credentials.");
+        {
+            throw new UnauthorizedException(
+                "Invalid credentials.");
+        }
 
         var passwordIsValid =
             _passwordHasher.Verify(
@@ -40,7 +47,16 @@ public sealed class LoginUserHandler
                 user.PasswordHash.Value);
 
         if (!passwordIsValid)
-            throw new DomainException("Invalid credentials.");
+        {
+            throw new UnauthorizedException(
+                "Invalid credentials.");
+        }
+
+        if (!user.IsActive)
+        {
+            throw new UnauthorizedException(
+                "User account is inactive.");
+        }
 
         var token =
             _jwtTokenGenerator.GenerateToken(
@@ -50,7 +66,7 @@ public sealed class LoginUserHandler
         return new LoginUserResponse(
             user.Id,
             user.Email.Value,
-            token,
-            DateTime.UtcNow.AddMinutes(60));
+            token.AccessToken,
+            token.ExpiresAt);
     }
 }
