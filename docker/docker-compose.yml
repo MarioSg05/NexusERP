@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
 
   sqlserver:
@@ -9,7 +7,7 @@ services:
 
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "Elamadodedios2005"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
 
     ports:
       - "14330:1433"

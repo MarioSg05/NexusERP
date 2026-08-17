@@ -32,6 +32,7 @@ using NexusERP.Application.Sales.ConfirmSalesOrder;
 using NexusERP.Application.Sales.CancelSalesOrder;
 using NexusERP.Application.Sales.GetSalesOrderById;
 using NexusERP.Application.Sales.GetSalesOrders;
+using NexusERP.Application.Identity.GetCurrentUser;
 
 namespace NexusERP.Application;
 
@@ -103,6 +104,7 @@ public static class DependencyInjection
         // Identity
         services.AddScoped<RegisterUserHandler>();
         services.AddScoped<LoginUserHandler>();
+        services.AddScoped<GetCurrentUserHandler>();
 
         // Reports 
         services.AddScoped<GetInventoryReportHandler>();

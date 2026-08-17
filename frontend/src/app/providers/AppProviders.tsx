@@ -1,5 +1,7 @@
 import type { PropsWithChildren } from "react";
 
+import { AuthProvider } from "../../features/auth/context/AuthProvider";
+
 import { QueryProvider } from "./QueryProvider";
 
 export function AppProviders({
@@ -7,7 +9,9 @@ export function AppProviders({
 }: PropsWithChildren) {
   return (
     <QueryProvider>
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
     </QueryProvider>
   );
 }

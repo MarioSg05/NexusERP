@@ -1,5 +1,12 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
+
+import { LoginPage } from "../../features/auth/pages/LoginPage";
+import { ProtectedRoute } from "../../features/auth/components/ProtectedRoute/ProtectedRoute";
 
 import { CustomersPage } from "../../features/customers/pages/CustomersPage";
 import { EditCustomerPage } from "../../features/customers/pages/EditCustomerPage";
@@ -31,83 +38,128 @@ import { SalesReportPage } from "../../features/reports/pages/SalesReportPage";
 import { AppLayout } from "../../shared/layouts/AppLayout";
 
 export function AppRouter() {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route element={<AppLayout />}>
-                    <Route index element={<DashboardPage />} />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="login"
+          element={<LoginPage />}
+        />
 
-                    <Route path="customers" element={<CustomersPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
+            <Route
+              index
+              element={<DashboardPage />}
+            />
 
-                    <Route path="customers/new" element={<NewCustomerPage />} />
+            <Route
+              path="customers"
+              element={<CustomersPage />}
+            />
 
-                    <Route
-                        path="customers/:id/edit"
-                        element={<EditCustomerPage />}
-                    />
+            <Route
+              path="customers/new"
+              element={<NewCustomerPage />}
+            />
 
-                    <Route path="products" element={<ProductsPage />} />
+            <Route
+              path="customers/:id/edit"
+              element={<EditCustomerPage />}
+            />
 
-                    <Route path="products/new" element={<NewProductPage />} />
+            <Route
+              path="products"
+              element={<ProductsPage />}
+            />
 
-                    <Route
-                        path="products/:id/edit"
-                        element={<EditProductPage />}
-                    />
+            <Route
+              path="products/new"
+              element={<NewProductPage />}
+            />
 
-                    <Route path="inventory" element={<InventoryPage />} />
+            <Route
+              path="products/:id/edit"
+              element={<EditProductPage />}
+            />
 
-                    <Route
-                        path="inventory/new"
-                        element={<CreateInventoryPage />}
-                    />
+            <Route
+              path="inventory"
+              element={<InventoryPage />}
+            />
 
-                    <Route path="purchasing" element={<PurchasingPage />} />
+            <Route
+              path="inventory/new"
+              element={<CreateInventoryPage />}
+            />
 
-                    <Route
-                        path="purchasing/new"
-                        element={<NewPurchaseOrderPage />}
-                    />
+            <Route
+              path="purchasing"
+              element={<PurchasingPage />}
+            />
 
-                    <Route
-                        path="purchasing/:id"
-                        element={<PurchaseOrderDetailPage />}
-                    />
+            <Route
+              path="purchasing/new"
+              element={<NewPurchaseOrderPage />}
+            />
 
-                    <Route path="sales" element={<SalesPage />} />
+            <Route
+              path="purchasing/:id"
+              element={<PurchaseOrderDetailPage />}
+            />
 
-                    <Route path="sales/new" element={<NewSalesOrderPage />} />
+            <Route
+              path="sales"
+              element={<SalesPage />}
+            />
 
-                    <Route
-                        path="sales/:id"
-                        element={<SalesOrderDetailPage />}
-                    />
+            <Route
+              path="sales/new"
+              element={<NewSalesOrderPage />}
+            />
 
-                    <Route path="reports" element={<ReportsLayout />}>
-                        <Route
-                            index
-                            element={<Navigate to="inventory" replace />}
-                        />
+            <Route
+              path="sales/:id"
+              element={<SalesOrderDetailPage />}
+            />
 
-                        <Route
-                            path="inventory"
-                            element={<InventoryReportPage />}
-                        />
+            <Route
+              path="reports"
+              element={<ReportsLayout />}
+            >
+              <Route
+                index
+                element={
+                  <Navigate
+                    to="inventory"
+                    replace
+                  />
+                }
+              />
 
-                        <Route
-                            path="low-stock"
-                            element={<LowStockReportPage />}
-                        />
+              <Route
+                path="inventory"
+                element={<InventoryReportPage />}
+              />
 
-                        <Route path="sales" element={<SalesReportPage />} />
+              <Route
+                path="low-stock"
+                element={<LowStockReportPage />}
+              />
 
-                        <Route
-                            path="purchasing"
-                            element={<PurchasingReportPage />}
-                        />
-                    </Route>
-                </Route>
-            </Routes>
-        </BrowserRouter>
-    );
+              <Route
+                path="sales"
+                element={<SalesReportPage />}
+              />
+
+              <Route
+                path="purchasing"
+                element={<PurchasingReportPage />}
+              />
+            </Route>
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }

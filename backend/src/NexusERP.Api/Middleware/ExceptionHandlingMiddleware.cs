@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using NexusERP.Domain.Exceptions;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+
 using NexusERP.Application.Common.Exceptions;
+using NexusERP.Domain.Exceptions;
 
 namespace NexusERP.Api.Middleware;
 
@@ -30,6 +31,12 @@ public sealed class ExceptionHandlingMiddleware
                 context,
                 exception);
         }
+        catch (UnauthorizedException exception)
+        {
+            await HandleUnauthorizedException(
+                context,
+                exception);
+        }
         catch (NotFoundException exception)
         {
             await HandleNotFoundException(
@@ -50,9 +57,56 @@ public sealed class ExceptionHandlingMiddleware
         }
     }
 
+    private async Task HandleValidationException(
+        HttpContext context,
+        ValidationException exception)
+    {
+        _logger.LogWarning(
+            exception,
+            exception.Message);
+
+        var errors = exception.Errors
+            .GroupBy(e => e.PropertyName)
+            .ToDictionary(
+                g => g.Key,
+                g => g
+                    .Select(e => e.ErrorMessage)
+                    .ToArray());
+
+        var problem =
+            new ValidationProblemDetails(errors)
+            {
+                Title = "Validation failed",
+                Status =
+                    StatusCodes.Status400BadRequest,
+                Instance = context.Request.Path
+            };
+
+        context.Response.StatusCode =
+            StatusCodes.Status400BadRequest;
+
+        await context.Response
+            .WriteAsJsonAsync(problem);
+    }
+
+    private async Task HandleUnauthorizedException(
+        HttpContext context,
+        UnauthorizedException exception)
+    {
+        _logger.LogWarning(
+            exception,
+            exception.Message);
+
+        await WriteProblem(
+            context,
+            StatusCodes.Status401Unauthorized,
+            "Unauthorized",
+            exception.Message);
+    }
+
     private async Task HandleNotFoundException(
-    HttpContext context,
-    NotFoundException exception)
+        HttpContext context,
+        NotFoundException exception)
     {
         _logger.LogWarning(
             exception,
@@ -65,54 +119,13 @@ public sealed class ExceptionHandlingMiddleware
             exception.Message);
     }
 
-    private async Task HandleValidationException(
-    HttpContext context,
-    ValidationException exception)
-    {
-        _logger.LogWarning(exception, exception.Message);
-
-        var errors = exception.Errors
-            .GroupBy(e => e.PropertyName)
-            .ToDictionary(
-                g => g.Key,
-                g => g.Select(e => e.ErrorMessage).ToArray());
-
-        var problem = new ValidationProblemDetails(errors)
-        {
-            Title = "Validation failed",
-            Status = StatusCodes.Status400BadRequest,
-            Instance = context.Request.Path
-        };
-
-        context.Response.StatusCode = StatusCodes.Status400BadRequest;
-
-        await context.Response.WriteAsJsonAsync(problem);
-    }
-
-    private static async Task WriteProblem(
-    HttpContext context,
-    int status,
-    string title,
-    string detail)
-    {
-        var problem = new ProblemDetails
-        {
-            Status = status,
-            Title = title,
-            Detail = detail,
-            Instance = context.Request.Path
-        };
-
-        context.Response.StatusCode = status;
-
-        await context.Response.WriteAsJsonAsync(problem);
-    }
-
     private async Task HandleDomainException(
-    HttpContext context,
-    DomainException exception)
+        HttpContext context,
+        DomainException exception)
     {
-        _logger.LogWarning(exception, exception.Message);
+        _logger.LogWarning(
+            exception,
+            exception.Message);
 
         await WriteProblem(
             context,
@@ -122,10 +135,12 @@ public sealed class ExceptionHandlingMiddleware
     }
 
     private async Task HandleUnexpectedException(
-    HttpContext context,
-    Exception exception)
+        HttpContext context,
+        Exception exception)
     {
-        _logger.LogError(exception, exception.Message);
+        _logger.LogError(
+            exception,
+            exception.Message);
 
         await WriteProblem(
             context,
@@ -134,5 +149,24 @@ public sealed class ExceptionHandlingMiddleware
             "An unexpected error occurred.");
     }
 
+    private static async Task WriteProblem(
+        HttpContext context,
+        int status,
+        string title,
+        string detail)
+    {
+        var problem =
+            new ProblemDetails
+            {
+                Status = status,
+                Title = title,
+                Detail = detail,
+                Instance = context.Request.Path
+            };
 
+        context.Response.StatusCode = status;
+
+        await context.Response
+            .WriteAsJsonAsync(problem);
+    }
 }
