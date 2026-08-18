@@ -21,6 +21,8 @@ import { formatDate } from "../../../shared/lib/formatDate";
 import type { ApiProblemDetails } from "../../../shared/api/ApiProblemDetails";
 import type { PurchaseOrderStatus } from "../models/PurchaseOrderModel";
 
+import { useAuth } from "../../auth/hooks/useAuth";
+
 function getStatusClasses(
   status: PurchaseOrderStatus,
 ): string {
@@ -37,6 +39,8 @@ function getStatusClasses(
 }
 
 export function PurchaseOrderDetailPage() {
+  const { canManageErp } = useAuth();
+
   const { id = "" } = useParams();
   const navigate = useNavigate();
 
@@ -109,7 +113,7 @@ export function PurchaseOrderDetailPage() {
     setActionError(null);
 
     try {
-     await cancelPurchaseOrder.mutateAsync(id);
+      await cancelPurchaseOrder.mutateAsync(id);
     } catch (error) {
       if (
         axios.isAxiosError<ApiProblemDetails>(
@@ -156,34 +160,35 @@ export function PurchaseOrderDetailPage() {
           </p>
         </div>
 
-        {purchaseOrder.status ===
-          "Pending" && (
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={() => {
-                void handleCancel();
-              }}
-              disabled={isActionPending}
-              className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <X size={16} />
-              Cancel Order
-            </button>
+        {canManageErp &&
+          purchaseOrder.status ===
+            "Pending" && (
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  void handleCancel();
+                }}
+                disabled={isActionPending}
+                className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <X size={16} />
+                Cancel Order
+              </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                void handleApprove();
-              }}
-              disabled={isActionPending}
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Check size={16} />
-              Approve Order
-            </button>
-          </div>
-        )}
+              <button
+                type="button"
+                onClick={() => {
+                  void handleApprove();
+                }}
+                disabled={isActionPending}
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Check size={16} />
+                Approve Order
+              </button>
+            </div>
+          )}
       </div>
 
       {actionError && (

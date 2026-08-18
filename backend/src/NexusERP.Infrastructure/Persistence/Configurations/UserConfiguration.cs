@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using NexusERP.Domain.Identity.Aggregates;
 using NexusERP.Infrastructure.Persistence.Converters;
 
@@ -8,7 +9,8 @@ namespace NexusERP.Infrastructure.Persistence.Configurations;
 public sealed class UserConfiguration
     : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(
+        EntityTypeBuilder<User> builder)
     {
         builder.ToTable("Users");
 
@@ -34,6 +36,10 @@ public sealed class UserConfiguration
 
         builder.Property(x => x.PasswordHash)
             .HasConversion<PasswordHashConverter>()
+            .IsRequired();
+
+        builder.Property(x => x.Role)
+            .HasConversion<int>()
             .IsRequired();
 
         builder.Property(x => x.IsActive)

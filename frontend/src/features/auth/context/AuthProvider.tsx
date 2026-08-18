@@ -127,18 +127,29 @@ export function AuthProvider({
     clearAuthenticatedState();
   }, [clearAuthenticatedState]);
 
+  const canManageErp =
+    user?.role === "Administrator" ||
+    user?.role === "Manager";
+
+  const canManageUsers =
+    user?.role === "Administrator";
+
   const value =
     useMemo<AuthContextValue>(
       () => ({
         user,
         isAuthenticated: user !== null,
         isLoading,
+        canManageErp,
+        canManageUsers,
         login,
         logout,
       }),
       [
         user,
         isLoading,
+        canManageErp,
+        canManageUsers,
         login,
         logout,
       ],

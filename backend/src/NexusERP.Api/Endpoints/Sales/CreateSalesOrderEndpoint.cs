@@ -1,4 +1,5 @@
 using NexusERP.Application.Sales.CreateSalesOrder;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Sales;
 
@@ -23,7 +24,8 @@ public static class CreateSalesOrderEndpoint
                     $"/api/sales-orders/{response.Id}",
                     response);
             })
-
+.RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
         .WithName("CreateSalesOrder")
         .WithSummary("Creates a new sales order.")
         .WithDescription("Creates a new sales order in the system.")

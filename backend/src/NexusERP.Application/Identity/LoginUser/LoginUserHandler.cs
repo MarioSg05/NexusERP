@@ -59,9 +59,10 @@ public sealed class LoginUserHandler
         }
 
         var token =
-            _jwtTokenGenerator.GenerateToken(
-                user.Id,
-                user.Email.Value);
+    _jwtTokenGenerator.GenerateToken(
+        user.Id,
+        user.Email.Value,
+        user.Role);
 
         return new LoginUserResponse(
             user.Id,

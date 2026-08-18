@@ -1,7 +1,7 @@
 import type { InventoryItem } from "../../models/InventoryModel";
 
 import { InventoryActionsMenu } from "../InventoryActionsMenu/InventoryActionsMenu";
-
+import { useAuth } from "../../../auth/hooks/useAuth";
 import type { InventoryStockMode } from "../InventoryStockDialog/InventoryStockDialog";
 
 interface InventoryTableProps {
@@ -13,6 +13,7 @@ export function InventoryTable({
     inventory,
     onStockAction,
 }: InventoryTableProps) {
+    const { canManageErp } = useAuth();
     return (
         <div className="overflow-hidden rounded-xl border border-slate-200">
             <div className="overflow-x-auto">
@@ -35,9 +36,11 @@ export function InventoryTable({
                                 Status
                             </th>
 
-                            <th className="w-28 px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
-                                Actions
-                            </th>
+                            {canManageErp && (
+                                <th className="w-28 px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                    Actions
+                                </th>
+                            )}
                         </tr>
                     </thead>
 
@@ -83,13 +86,15 @@ export function InventoryTable({
                                     </span>
                                 </td>
 
-                                <td className="px-6 py-4 text-right">
-                                    <InventoryActionsMenu
-                                        onSelect={(mode) => {
-                                            onStockAction(item, mode);
-                                        }}
-                                    />
-                                </td>
+                                {canManageErp && (
+                                    <td className="px-6 py-4 text-right">
+                                        <InventoryActionsMenu
+                                            onSelect={(mode) => {
+                                                onStockAction(item, mode);
+                                            }}
+                                        />
+                                    </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>

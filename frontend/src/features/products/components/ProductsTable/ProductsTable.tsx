@@ -1,6 +1,8 @@
 import { Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { useAuth } from "../../../auth/hooks/useAuth";
+
 import { formatCurrency } from "../../../../shared/lib/formatCurrency";
 
 import type { Product } from "../../models/ProductModel";
@@ -12,6 +14,8 @@ interface ProductsTableProps {
 export function ProductsTable({
   products,
 }: ProductsTableProps) {
+  const { canManageErp } = useAuth();
+
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200">
       <div className="overflow-x-auto">
@@ -34,9 +38,11 @@ export function ProductsTable({
                 Status
               </th>
 
-              <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Actions
-              </th>
+              {canManageErp && (
+                <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
 
@@ -75,16 +81,18 @@ export function ProductsTable({
                   </span>
                 </td>
 
-                <td className="px-6 py-4 text-right">
-                  <Link
-                    to={`/products/${product.id}/edit`}
-                    aria-label={`Edit ${product.name}`}
-                    title={`Edit ${product.name}`}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
-                  >
-                    <Pencil size={16} />
-                  </Link>
-                </td>
+                {canManageErp && (
+                  <td className="px-6 py-4 text-right">
+                    <Link
+                      to={`/products/${product.id}/edit`}
+                      aria-label={`Edit ${product.name}`}
+                      title={`Edit ${product.name}`}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+                    >
+                      <Pencil size={16} />
+                    </Link>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

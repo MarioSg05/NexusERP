@@ -1,4 +1,5 @@
 using NexusERP.Application.Purchasing.CancelPurchaseOrder;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Purchasing;
 
@@ -21,6 +22,8 @@ public static class CancelPurchaseOrderEndpoint
 
                     return Results.Ok(response);
                 })
+                .RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
             .WithName("CancelPurchaseOrder")
             .WithSummary("Cancels a purchase order.")
             .WithDescription(

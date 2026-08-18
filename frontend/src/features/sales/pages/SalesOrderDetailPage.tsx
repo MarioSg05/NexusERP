@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
-import { Check, X } from "lucide-react";
+import {
+  Check,
+  X,
+} from "lucide-react";
 import {
   useNavigate,
   useParams,
@@ -20,6 +23,8 @@ import { formatDate } from "../../../shared/lib/formatDate";
 import type { ApiProblemDetails } from "../../../shared/api/ApiProblemDetails";
 import type { SalesOrderStatus } from "../models/SalesOrderModel";
 
+import { useAuth } from "../../auth/hooks/useAuth";
+
 function getStatusClasses(
   status: SalesOrderStatus,
 ): string {
@@ -36,11 +41,15 @@ function getStatusClasses(
 }
 
 export function SalesOrderDetailPage() {
+  const { canManageErp } = useAuth();
+
   const { id = "" } = useParams();
   const navigate = useNavigate();
 
-  const [showConfirmDialog, setShowConfirmDialog] =
-    useState(false);
+  const [
+    showConfirmDialog,
+    setShowConfirmDialog,
+  ] = useState(false);
 
   const [confirmError, setConfirmError] =
     useState<string | null>(null);
@@ -164,36 +173,39 @@ export function SalesOrderDetailPage() {
             </p>
           </div>
 
-          {salesOrder.status ===
-            "Pending" && (
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  void handleCancel();
-                }}
-                disabled={isActionPending}
-                className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
-              >
-                <X size={16} />
-                Cancel Order
-              </button>
+          {canManageErp &&
+            salesOrder.status ===
+              "Pending" && (
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    void handleCancel();
+                  }}
+                  disabled={isActionPending}
+                  className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
+                >
+                  <X size={16} />
+                  Cancel Order
+                </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setActionError(null);
-                  setConfirmError(null);
-                  setShowConfirmDialog(true);
-                }}
-                disabled={isActionPending}
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-              >
-                <Check size={16} />
-                Confirm Order
-              </button>
-            </div>
-          )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActionError(null);
+                    setConfirmError(null);
+                    setShowConfirmDialog(
+                      true,
+                    );
+                  }}
+                  disabled={isActionPending}
+                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                >
+                  <Check size={16} />
+                  Confirm Order
+                </button>
+              </div>
+            )}
         </div>
 
         {actionError && (

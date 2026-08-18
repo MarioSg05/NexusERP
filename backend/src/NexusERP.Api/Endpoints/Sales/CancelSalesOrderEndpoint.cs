@@ -1,4 +1,5 @@
 using NexusERP.Application.Sales.CancelSalesOrder;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Sales;
 
@@ -21,6 +22,8 @@ public static class CancelSalesOrderEndpoint
 
                     return Results.Ok(response);
                 })
+                .RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
             .WithName("CancelSalesOrder")
             .WithSummary("Cancels a sales order.")
             .WithDescription(
