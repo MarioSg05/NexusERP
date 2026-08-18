@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 
 using NexusERP.Application.Common.Exceptions;
 using NexusERP.Application.Common.Interfaces;
-using NexusERP.Application.Common.Exceptions;
 
 namespace NexusERP.Application.Identity.GetCurrentUser;
 
@@ -44,6 +43,7 @@ public sealed class GetCurrentUserHandler
             user.FirstName.Value,
             user.LastName.Value,
             user.Email.Value,
+            user.Role.ToString(),
             user.IsActive);
     }
 }

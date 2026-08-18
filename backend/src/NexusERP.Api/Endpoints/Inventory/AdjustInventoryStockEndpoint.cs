@@ -1,4 +1,5 @@
 using NexusERP.Application.Inventory.AdjustInventoryStock;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Inventory;
 
@@ -23,6 +24,8 @@ public static class AdjustInventoryStockEndpoint
 
                     return Results.Ok(response);
                 })
+                .RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
             .WithName("AdjustInventoryStock")
             .WithSummary("Adjusts inventory stock.")
             .WithDescription(

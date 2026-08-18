@@ -1,4 +1,5 @@
 using NexusERP.Application.Purchasing.ApprovePurchaseOrder;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Purchasing;
 
@@ -21,6 +22,8 @@ public static class ApprovePurchaseOrderEndpoint
 
                     return Results.Ok(response);
                 })
+                .RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
             .WithName("ApprovePurchaseOrder")
             .WithSummary("Approves a purchase order.")
             .WithDescription(

@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 using NexusERP.Application.Common.Interfaces;
 using NexusERP.Application.Common.Models;
+using NexusERP.Domain.Identity.Enums;
 
 namespace NexusERP.Infrastructure.Identity.Jwt;
 
@@ -23,7 +24,8 @@ public sealed class JwtTokenGenerator
 
     public JwtTokenResult GenerateToken(
         Guid userId,
-        string email)
+        string email,
+        UserRole role)
     {
         var claims = new[]
         {
@@ -33,7 +35,11 @@ public sealed class JwtTokenGenerator
 
             new Claim(
                 JwtRegisteredClaimNames.Email,
-                email)
+                email),
+
+            new Claim(
+                ClaimTypes.Role,
+                role.ToString())
         };
 
         var key =

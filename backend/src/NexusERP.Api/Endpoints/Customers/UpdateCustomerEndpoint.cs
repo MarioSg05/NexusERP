@@ -1,4 +1,5 @@
 using NexusERP.Application.Customers.UpdateCustomer;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Customers;
 
@@ -23,6 +24,8 @@ public static class UpdateCustomerEndpoint
 
                     return Results.Ok(response);
                 })
+                .RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
             .WithName("UpdateCustomer")
             .WithSummary("Updates an existing customer.")
             .WithDescription(

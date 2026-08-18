@@ -5,4 +5,5 @@ public sealed record GetCurrentUserResponse(
     string FirstName,
     string LastName,
     string Email,
+    string Role,
     bool IsActive);

@@ -1,4 +1,5 @@
 using NexusERP.Application.Sales.ConfirmSalesOrder;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Sales;
 
@@ -21,6 +22,8 @@ public static class ConfirmSalesOrderEndpoint
 
                     return Results.Ok(response);
                 })
+                .RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
             .WithName("ConfirmSalesOrder")
             .WithSummary("Confirms a sales order.")
             .WithDescription(

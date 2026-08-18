@@ -1,4 +1,5 @@
 using NexusERP.Application.Inventory.IncreaseInventoryStock;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Inventory;
 
@@ -23,6 +24,8 @@ public static class IncreaseInventoryStockEndpoint
 
                     return Results.Ok(response);
                 })
+                .RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
             .WithName("IncreaseInventoryStock")
             .WithSummary("Increases inventory stock.")
             .WithDescription(

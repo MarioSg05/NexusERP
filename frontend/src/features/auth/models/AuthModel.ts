@@ -1,3 +1,8 @@
+export type UserRole =
+  | "Administrator"
+  | "Manager"
+  | "Viewer";
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -15,5 +20,6 @@ export interface CurrentUser {
   firstName: string;
   lastName: string;
   email: string;
+  role: UserRole;
   isActive: boolean;
 }

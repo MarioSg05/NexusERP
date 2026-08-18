@@ -1,4 +1,5 @@
 using NexusERP.Application.Products.RegisterProduct;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Products;
 
@@ -23,7 +24,8 @@ public static class RegisterProductEndpoint
                     $"/api/products/{response.Id}",
                     response);
             })
-
+.RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
         .WithName("RegisterProduct")
         .WithSummary("Registers a new product.")
         .WithDescription("Creates a new product in the system.")

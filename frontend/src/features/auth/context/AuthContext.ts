@@ -9,7 +9,11 @@ export interface AuthContextValue {
   user: CurrentUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (request: LoginRequest) => Promise<void>;
+  canManageErp: boolean;
+  canManageUsers: boolean;
+  login: (
+    request: LoginRequest,
+  ) => Promise<void>;
   logout: () => void;
 }
 

@@ -5,8 +5,9 @@ import {
   Routes,
 } from "react-router-dom";
 
-import { LoginPage } from "../../features/auth/pages/LoginPage";
 import { ProtectedRoute } from "../../features/auth/components/ProtectedRoute/ProtectedRoute";
+import { RequireErpManagement } from "../../features/auth/components/RequireErpManagement/RequireErpManagement";
+import { LoginPage } from "../../features/auth/pages/LoginPage";
 
 import { CustomersPage } from "../../features/customers/pages/CustomersPage";
 import { EditCustomerPage } from "../../features/customers/pages/EditCustomerPage";
@@ -14,26 +15,26 @@ import { NewCustomerPage } from "../../features/customers/pages/NewCustomerPage"
 
 import { DashboardPage } from "../../features/dashboard/pages/DashboardPage";
 
-import { NewProductPage } from "../../features/products/pages/NewProductPage";
+import { CreateInventoryPage } from "../../features/inventory/pages/CreateInventoryPage";
+import { InventoryPage } from "../../features/inventory/pages/InventoryPage";
+
 import { EditProductPage } from "../../features/products/pages/EditProductPage";
+import { NewProductPage } from "../../features/products/pages/NewProductPage";
 import { ProductsPage } from "../../features/products/pages/ProductsPage";
 
-import { InventoryPage } from "../../features/inventory/pages/InventoryPage";
-import { CreateInventoryPage } from "../../features/inventory/pages/CreateInventoryPage";
-
-import { PurchasingPage } from "../../features/purchasing/pages/PurchasingPage";
-import { PurchaseOrderDetailPage } from "../../features/purchasing/pages/PurchaseOrderDetailPage";
 import { NewPurchaseOrderPage } from "../../features/purchasing/pages/NewPurchaseOrderPage";
-
-import { SalesPage } from "../../features/sales/pages/SalesPage";
-import { SalesOrderDetailPage } from "../../features/sales/pages/SalesOrderDetailPage";
-import { NewSalesOrderPage } from "../../features/sales/pages/NewSalesOrderPage";
+import { PurchaseOrderDetailPage } from "../../features/purchasing/pages/PurchaseOrderDetailPage";
+import { PurchasingPage } from "../../features/purchasing/pages/PurchasingPage";
 
 import { ReportsLayout } from "../../features/reports/components/ReportsLayout/ReportsLayout";
 import { InventoryReportPage } from "../../features/reports/pages/InventoryReportPage";
 import { LowStockReportPage } from "../../features/reports/pages/LowStockReportPage";
 import { PurchasingReportPage } from "../../features/reports/pages/PurchasingReportPage";
 import { SalesReportPage } from "../../features/reports/pages/SalesReportPage";
+
+import { NewSalesOrderPage } from "../../features/sales/pages/NewSalesOrderPage";
+import { SalesOrderDetailPage } from "../../features/sales/pages/SalesOrderDetailPage";
+import { SalesPage } from "../../features/sales/pages/SalesPage";
 
 import { AppLayout } from "../../shared/layouts/AppLayout";
 
@@ -59,28 +60,8 @@ export function AppRouter() {
             />
 
             <Route
-              path="customers/new"
-              element={<NewCustomerPage />}
-            />
-
-            <Route
-              path="customers/:id/edit"
-              element={<EditCustomerPage />}
-            />
-
-            <Route
               path="products"
               element={<ProductsPage />}
-            />
-
-            <Route
-              path="products/new"
-              element={<NewProductPage />}
-            />
-
-            <Route
-              path="products/:id/edit"
-              element={<EditProductPage />}
             />
 
             <Route
@@ -89,18 +70,8 @@ export function AppRouter() {
             />
 
             <Route
-              path="inventory/new"
-              element={<CreateInventoryPage />}
-            />
-
-            <Route
               path="purchasing"
               element={<PurchasingPage />}
-            />
-
-            <Route
-              path="purchasing/new"
-              element={<NewPurchaseOrderPage />}
             />
 
             <Route
@@ -111,11 +82,6 @@ export function AppRouter() {
             <Route
               path="sales"
               element={<SalesPage />}
-            />
-
-            <Route
-              path="sales/new"
-              element={<NewSalesOrderPage />}
             />
 
             <Route
@@ -155,6 +121,43 @@ export function AppRouter() {
               <Route
                 path="purchasing"
                 element={<PurchasingReportPage />}
+              />
+            </Route>
+
+            <Route element={<RequireErpManagement />}>
+              <Route
+                path="customers/new"
+                element={<NewCustomerPage />}
+              />
+
+              <Route
+                path="customers/:id/edit"
+                element={<EditCustomerPage />}
+              />
+
+              <Route
+                path="products/new"
+                element={<NewProductPage />}
+              />
+
+              <Route
+                path="products/:id/edit"
+                element={<EditProductPage />}
+              />
+
+              <Route
+                path="inventory/new"
+                element={<CreateInventoryPage />}
+              />
+
+              <Route
+                path="purchasing/new"
+                element={<NewPurchaseOrderPage />}
+              />
+
+              <Route
+                path="sales/new"
+                element={<NewSalesOrderPage />}
               />
             </Route>
           </Route>

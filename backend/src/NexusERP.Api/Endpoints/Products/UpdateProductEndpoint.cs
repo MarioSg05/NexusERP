@@ -1,4 +1,5 @@
 using NexusERP.Application.Products.UpdateProduct;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Products;
 
@@ -23,6 +24,8 @@ public static class UpdateProductEndpoint
 
                     return Results.Ok(response);
                 })
+                .RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
             .WithName("UpdateProduct")
             .WithSummary("Updates an existing product.")
             .WithDescription(

@@ -1,4 +1,5 @@
 using NexusERP.Application.Customers.RegisterCustomer;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Customers;
 
@@ -23,7 +24,8 @@ public static class RegisterCustomerEndpoint
                     $"/api/customers/{response.Id}",
                     response);
             })
-
+        .RequireAuthorization(
+            AuthorizationPolicies.ManageErp)
         .WithName("RegisterCustomer")
         .WithSummary("Registers a new customer.")
         .WithDescription("Creates a new customer in the system.")

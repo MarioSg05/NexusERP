@@ -1,4 +1,5 @@
 using NexusERP.Application.Purchasing.CreatePurchaseOrder;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Purchasing;
 
@@ -23,7 +24,8 @@ public static class CreatePurchaseOrderEndpoint
                     $"/api/purchase-orders/{response.Id}",
                     response);
             })
-
+.RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
         .WithName("CreatePurchaseOrder")
         .WithSummary("Creates a new purchase order.")
         .WithDescription("Creates a new purchase order in the system.")
