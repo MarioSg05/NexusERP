@@ -1,14 +1,13 @@
 import {
   Boxes,
+  Building2,
   ChartColumn,
   LayoutDashboard,
   Package,
   ReceiptText,
-  Settings,
   ShoppingCart,
-  Users,
   UserCog,
-  Building2,
+  Users,
 } from "lucide-react";
 
 import type { NavigationItem } from "./types";
@@ -35,9 +34,9 @@ export const navigationItems: NavigationItem[] = [
     icon: Boxes,
   },
   {
-  label: "Suppliers",
-  path: "/suppliers",
-  icon: Building2,
+    label: "Suppliers",
+    path: "/suppliers",
+    icon: Building2,
   },
   {
     label: "Purchasing",
@@ -58,10 +57,5 @@ export const navigationItems: NavigationItem[] = [
     label: "Users",
     path: "/users",
     icon: UserCog,
-  },
-  {
-    label: "Settings",
-    path: "/settings",
-    icon: Settings,
   },
 ];

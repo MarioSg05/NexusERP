@@ -45,7 +45,9 @@ import { EditUserPage } from "../../features/users/pages/EditUserPage";
 import { NewUserPage } from "../../features/users/pages/NewUserPage";
 import { UsersPage } from "../../features/users/pages/UsersPage";
 
+import { RequireGuidParam } from "../../shared/components/routing/RequireGuidParam/RequireGuidParam";
 import { AppLayout } from "../../shared/layouts/AppLayout";
+import { NotFoundPage } from "../../shared/pages/NotFoundPage";
 
 export function AppRouter() {
   return (
@@ -89,18 +91,8 @@ export function AppRouter() {
             />
 
             <Route
-              path="purchasing/:id"
-              element={<PurchaseOrderDetailPage />}
-            />
-
-            <Route
               path="sales"
               element={<SalesPage />}
-            />
-
-            <Route
-              path="sales/:id"
-              element={<SalesOrderDetailPage />}
             />
 
             <Route
@@ -135,6 +127,18 @@ export function AppRouter() {
               <Route
                 path="purchasing"
                 element={<PurchasingReportPage />}
+              />
+            </Route>
+
+            <Route element={<RequireGuidParam />}>
+              <Route
+                path="purchasing/:id"
+                element={<PurchaseOrderDetailPage />}
+              />
+
+              <Route
+                path="sales/:id"
+                element={<SalesOrderDetailPage />}
               />
             </Route>
 
@@ -203,6 +207,11 @@ export function AppRouter() {
             </Route>
           </Route>
         </Route>
+
+        <Route
+          path="*"
+          element={<NotFoundPage />}
+        />
       </Routes>
     </BrowserRouter>
   );
