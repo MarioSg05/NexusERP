@@ -7,6 +7,7 @@ import {
   Settings,
   ShoppingCart,
   Users,
+  UserCog,
 } from "lucide-react";
 
 import type { NavigationItem } from "./types";
@@ -46,6 +47,11 @@ export const navigationItems: NavigationItem[] = [
     label: "Reports",
     path: "/reports",
     icon: ChartColumn,
+  },
+  {
+    label: "Users",
+    path: "/users",
+    icon: UserCog,
   },
   {
     label: "Settings",

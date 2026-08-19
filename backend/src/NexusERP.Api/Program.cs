@@ -139,6 +139,12 @@ if (app.Environment.IsDevelopment())
 app.MapRegisterUser();
 app.MapLoginUser();
 app.MapMeEndpoint();
+app.MapGetUsers();
+app.MapGetUserById();
+app.MapUpdateUser();
+app.MapChangeUserRole();
+app.MapActivateUser();
+app.MapDeactivateUser();
 
 app.UseGlobalExceptionHandling();
 

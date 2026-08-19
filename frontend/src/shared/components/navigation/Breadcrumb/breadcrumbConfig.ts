@@ -85,7 +85,6 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
             label: "Inventory",
         },
     ],
-
     "/reports/low-stock": [
         {
             label: "Reports",
@@ -94,7 +93,6 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
             label: "Low Stock",
         },
     ],
-
     "/reports/sales": [
         {
             label: "Reports",
@@ -103,13 +101,27 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
             label: "Sales",
         },
     ],
-
     "/reports/purchasing": [
         {
             label: "Reports",
         },
         {
             label: "Purchasing",
+        },
+    ],
+
+    "/users": [
+        {
+            label: "Users",
+        },
+    ],
+    "/users/new": [
+        {
+            label: "Users",
+            href: "/users",
+        },
+        {
+            label: "New User",
         },
     ],
 };
@@ -139,6 +151,18 @@ export function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {
         ];
     }
 
+    if (pathname.startsWith("/users/") && pathname.endsWith("/edit")) {
+        return [
+            {
+                label: "Users",
+                href: "/users",
+            },
+            {
+                label: "Edit User",
+            },
+        ];
+    }
+
     if (pathname.startsWith("/purchasing/") && pathname !== "/purchasing/new") {
         return [
             {
@@ -162,5 +186,6 @@ export function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {
             },
         ];
     }
+
     return breadcrumbMap[pathname] ?? [];
 }

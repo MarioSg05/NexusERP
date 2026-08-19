@@ -1,7 +1,4 @@
-export type UserRole =
-  | "Administrator"
-  | "Manager"
-  | "Viewer";
+import type { UserRole } from "./UserRole";
 
 export interface LoginRequest {
   email: string;
