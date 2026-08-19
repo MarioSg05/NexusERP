@@ -37,9 +37,13 @@ import { NewSalesOrderPage } from "../../features/sales/pages/NewSalesOrderPage"
 import { SalesOrderDetailPage } from "../../features/sales/pages/SalesOrderDetailPage";
 import { SalesPage } from "../../features/sales/pages/SalesPage";
 
-import { UsersPage } from "../../features/users/pages/UsersPage";
-import { NewUserPage } from "../../features/users/pages/NewUserPage";
+import { EditSupplierPage } from "../../features/suppliers/pages/EditSupplierPage";
+import { NewSupplierPage } from "../../features/suppliers/pages/NewSupplierPage";
+import { SuppliersPage } from "../../features/suppliers/pages/SuppliersPage";
+
 import { EditUserPage } from "../../features/users/pages/EditUserPage";
+import { NewUserPage } from "../../features/users/pages/NewUserPage";
+import { UsersPage } from "../../features/users/pages/UsersPage";
 
 import { AppLayout } from "../../shared/layouts/AppLayout";
 
@@ -72,6 +76,11 @@ export function AppRouter() {
             <Route
               path="inventory"
               element={<InventoryPage />}
+            />
+
+            <Route
+              path="suppliers"
+              element={<SuppliersPage />}
             />
 
             <Route
@@ -170,6 +179,16 @@ export function AppRouter() {
               <Route
                 path="inventory/new"
                 element={<CreateInventoryPage />}
+              />
+
+              <Route
+                path="suppliers/new"
+                element={<NewSupplierPage />}
+              />
+
+              <Route
+                path="suppliers/:id/edit"
+                element={<EditSupplierPage />}
               />
 
               <Route

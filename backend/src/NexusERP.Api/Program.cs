@@ -176,6 +176,10 @@ app.MapAdjustInventoryStock();
 
 app.MapRegisterSupplier();
 app.MapGetSuppliers();
+app.MapGetSupplierById();
+app.MapUpdateSupplier();
+app.MapActivateSupplier();
+app.MapDeactivateSupplier();
 
 app.MapCreateSalesOrder();
 app.MapGetSalesOrders();

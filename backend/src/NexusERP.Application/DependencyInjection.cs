@@ -39,6 +39,10 @@ using NexusERP.Application.Identity.UpdateUser;
 using NexusERP.Application.Identity.ChangeUserRole;
 using NexusERP.Application.Identity.ActivateUser;
 using NexusERP.Application.Identity.DeactivateUser;
+using NexusERP.Application.Suppliers.GetSupplierById;
+using NexusERP.Application.Suppliers.UpdateSupplier;
+using NexusERP.Application.Suppliers.ActivateSupplier;
+using NexusERP.Application.Suppliers.DeactivateSupplier;
 
 namespace NexusERP.Application;
 
@@ -87,12 +91,19 @@ public static class DependencyInjection
         services.AddScoped<RegisterSupplierValidator>();
 
         services.AddScoped<GetSuppliersHandler>();
-        services.AddScoped<GetPurchaseOrdersHandler>();
+        services.AddScoped<GetSupplierByIdHandler>();
+
+        services.AddScoped<UpdateSupplierHandler>();
+        services.AddScoped<UpdateSupplierValidator>();
+
+        services.AddScoped<ActivateSupplierHandler>();
+        services.AddScoped<DeactivateSupplierHandler>();
 
         // Purchasing
         services.AddScoped<CreatePurchaseOrderHandler>();
         services.AddScoped<CreatePurchaseOrderValidator>();
 
+        services.AddScoped<GetPurchaseOrdersHandler>();
         services.AddScoped<GetPurchaseOrderByIdHandler>();
         services.AddScoped<ApprovePurchaseOrderHandler>();
         services.AddScoped<CancelPurchaseOrderHandler>();
