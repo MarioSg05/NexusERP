@@ -33,6 +33,12 @@ using NexusERP.Application.Sales.CancelSalesOrder;
 using NexusERP.Application.Sales.GetSalesOrderById;
 using NexusERP.Application.Sales.GetSalesOrders;
 using NexusERP.Application.Identity.GetCurrentUser;
+using NexusERP.Application.Identity.GetUsers;
+using NexusERP.Application.Identity.GetUserById;
+using NexusERP.Application.Identity.UpdateUser;
+using NexusERP.Application.Identity.ChangeUserRole;
+using NexusERP.Application.Identity.ActivateUser;
+using NexusERP.Application.Identity.DeactivateUser;
 
 namespace NexusERP.Application;
 
@@ -103,8 +109,22 @@ public static class DependencyInjection
 
         // Identity
         services.AddScoped<RegisterUserHandler>();
+        services.AddScoped<RegisterUserValidator>();
+
         services.AddScoped<LoginUserHandler>();
+
         services.AddScoped<GetCurrentUserHandler>();
+        services.AddScoped<GetUsersHandler>();
+        services.AddScoped<GetUserByIdHandler>();
+
+        services.AddScoped<UpdateUserHandler>();
+        services.AddScoped<UpdateUserValidator>();
+
+        services.AddScoped<ChangeUserRoleHandler>();
+        services.AddScoped<ChangeUserRoleValidator>();
+
+        services.AddScoped<ActivateUserHandler>();
+        services.AddScoped<DeactivateUserHandler>();
 
         // Reports 
         services.AddScoped<GetInventoryReportHandler>();

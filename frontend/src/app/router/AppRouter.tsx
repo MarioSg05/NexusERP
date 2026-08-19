@@ -7,6 +7,7 @@ import {
 
 import { ProtectedRoute } from "../../features/auth/components/ProtectedRoute/ProtectedRoute";
 import { RequireErpManagement } from "../../features/auth/components/RequireErpManagement/RequireErpManagement";
+import { RequireUserManagement } from "../../features/auth/components/RequireUserManagement/RequireUserManagement";
 import { LoginPage } from "../../features/auth/pages/LoginPage";
 
 import { CustomersPage } from "../../features/customers/pages/CustomersPage";
@@ -35,6 +36,10 @@ import { SalesReportPage } from "../../features/reports/pages/SalesReportPage";
 import { NewSalesOrderPage } from "../../features/sales/pages/NewSalesOrderPage";
 import { SalesOrderDetailPage } from "../../features/sales/pages/SalesOrderDetailPage";
 import { SalesPage } from "../../features/sales/pages/SalesPage";
+
+import { UsersPage } from "../../features/users/pages/UsersPage";
+import { NewUserPage } from "../../features/users/pages/NewUserPage";
+import { EditUserPage } from "../../features/users/pages/EditUserPage";
 
 import { AppLayout } from "../../shared/layouts/AppLayout";
 
@@ -121,6 +126,23 @@ export function AppRouter() {
               <Route
                 path="purchasing"
                 element={<PurchasingReportPage />}
+              />
+            </Route>
+
+            <Route element={<RequireUserManagement />}>
+              <Route
+                path="users"
+                element={<UsersPage />}
+              />
+
+              <Route
+                path="users/new"
+                element={<NewUserPage />}
+              />
+
+              <Route
+                path="users/:id/edit"
+                element={<EditUserPage />}
               />
             </Route>
 
