@@ -43,6 +43,7 @@ using NexusERP.Application.Suppliers.GetSupplierById;
 using NexusERP.Application.Suppliers.UpdateSupplier;
 using NexusERP.Application.Suppliers.ActivateSupplier;
 using NexusERP.Application.Suppliers.DeactivateSupplier;
+using NexusERP.Application.AI.BusinessInsights;
 
 namespace NexusERP.Application;
 
@@ -145,6 +146,10 @@ public static class DependencyInjection
 
         // Dashboard 
         services.AddScoped<GetDashboardHandler>();
+
+        // AI
+        services.AddScoped<BusinessInsightsAnalyzer>();
+        services.AddScoped<GetBusinessInsightsHandler>();
 
         return services;
     }

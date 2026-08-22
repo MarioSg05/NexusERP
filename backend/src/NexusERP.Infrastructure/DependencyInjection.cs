@@ -7,6 +7,7 @@ using NexusERP.Infrastructure.Identity.Services;
 using Microsoft.Extensions.Options;
 using NexusERP.Infrastructure.Identity.Jwt;
 using NexusERP.Infrastructure.Persistence.Queries;
+using NexusERP.Infrastructure.AI;
 
 namespace NexusERP.Infrastructure;
 
@@ -25,8 +26,27 @@ public static class DependencyInjection
         services.Configure<JwtSettings>(
           configuration.GetSection(JwtSettings.SectionName));
 
+        services.Configure<OllamaSettings>(
+            configuration.GetSection(
+                OllamaSettings.SectionName));
+
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
+        services.AddHttpClient<
+            IAiInsightsGenerator,
+            OllamaBusinessInsightsGenerator>(
+                (serviceProvider, client) =>
+                {
+                    var settings =
+                        serviceProvider
+                            .GetRequiredService<
+                                IOptions<OllamaSettings>>()
+                            .Value;
+
+                    client.Timeout =
+                        TimeSpan.FromSeconds(
+                            settings.TimeoutSeconds);
+                });
         services.AddScoped<IApplicationDbContext>(
             provider => provider.GetRequiredService<ApplicationDbContext>());
 
