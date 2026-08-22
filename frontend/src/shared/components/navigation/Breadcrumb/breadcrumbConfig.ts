@@ -109,6 +109,11 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
             label: "Purchasing",
         },
     ],
+    "/ai/business-insights": [
+        {
+            label: "AI Insights",
+        },
+    ],
 
     "/users": [
         {

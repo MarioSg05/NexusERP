@@ -5,6 +5,8 @@ import {
   Routes,
 } from "react-router-dom";
 
+import { BusinessInsightsPage } from "../../features/ai/pages/BusinessInsightsPage";
+
 import { ProtectedRoute } from "../../features/auth/components/ProtectedRoute/ProtectedRoute";
 import { RequireErpManagement } from "../../features/auth/components/RequireErpManagement/RequireErpManagement";
 import { RequireUserManagement } from "../../features/auth/components/RequireUserManagement/RequireUserManagement";
@@ -93,6 +95,11 @@ export function AppRouter() {
             <Route
               path="sales"
               element={<SalesPage />}
+            />
+
+            <Route
+              path="ai/business-insights"
+              element={<BusinessInsightsPage />}
             />
 
             <Route

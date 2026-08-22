@@ -19,6 +19,7 @@ using NexusERP.Api.Endpoints.Products;
 using NexusERP.Api.Endpoints.Sales;
 using NexusERP.Api.Endpoints.Reports;
 using NexusERP.Api.Endpoints.Dashboard;
+using NexusERP.Api.Endpoints.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -202,5 +203,8 @@ app.MapGetPurchasingReport();
 
 // Dashboard
 app.MapGetDashboard();
+
+// AI
+app.MapGetBusinessInsights();
 
 app.Run();

@@ -1,5 +1,6 @@
 import {
   Boxes,
+  BrainCircuit,
   Building2,
   ChartColumn,
   LayoutDashboard,
@@ -52,6 +53,11 @@ export const navigationItems: NavigationItem[] = [
     label: "Reports",
     path: "/reports",
     icon: ChartColumn,
+  },
+  {
+    label: "AI Insights",
+    path: "/ai/business-insights",
+    icon: BrainCircuit,
   },
   {
     label: "Users",
