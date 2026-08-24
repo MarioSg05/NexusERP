@@ -44,6 +44,7 @@ using NexusERP.Application.Suppliers.UpdateSupplier;
 using NexusERP.Application.Suppliers.ActivateSupplier;
 using NexusERP.Application.Suppliers.DeactivateSupplier;
 using NexusERP.Application.AI.BusinessInsights;
+using NexusERP.Application.Common.DomainEvents;
 
 namespace NexusERP.Application;
 
@@ -150,6 +151,11 @@ public static class DependencyInjection
         // AI
         services.AddScoped<BusinessInsightsAnalyzer>();
         services.AddScoped<GetBusinessInsightsHandler>();
+
+        // Domain Events
+        services.AddScoped<
+            IDomainEventDispatcher,
+            DomainEventDispatcher>();
 
         return services;
     }

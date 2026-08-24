@@ -46,6 +46,7 @@ Core architectural principles:
 - Rich Domain Model
 - Dependency Inversion
 - CQRS-style Application Layer
+- In-process Domain Event dispatching
 - Entity Framework Core
 - Minimal APIs
 
@@ -464,6 +465,8 @@ Features that do not require persistence changes do not introduce database migra
 - Dashboard
 - Frontend Phase 1
 - AI Business Insights foundation
+- Backend integration testing foundation
+- In-process Domain Event dispatching
 
 ## Planned
 
