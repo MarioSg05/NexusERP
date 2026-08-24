@@ -1,5 +1,6 @@
 using NexusERP.Domain.Common;
 using NexusERP.Domain.Identity.Enums;
+using NexusERP.Domain.Identity.Events;
 using NexusERP.Domain.Identity.ValueObjects;
 
 namespace NexusERP.Domain.Identity.Aggregates;
@@ -39,11 +40,18 @@ public sealed class User : AggregateRoot
         Email email,
         PasswordHash passwordHash)
     {
-        return new User(
-            firstName,
-            lastName,
-            email,
-            passwordHash);
+        var user =
+            new User(
+                firstName,
+                lastName,
+                email,
+                passwordHash);
+
+        user.AddDomainEvent(
+            new UserRegisteredEvent(
+                user.Id));
+
+        return user;
     }
 
     public void ChangeName(
