@@ -262,25 +262,129 @@ NexusERP
 
 # Testing
 
-Current testing strategy:
+NexusERP uses separate unit and integration testing strategies.
 
-- xUnit
-- Arrange / Act / Assert
-- Aggregate tests
-- Value Object tests
-- Application tests
-- Deterministic AI analysis tests
-- AI provider fallback tests
-- Integration test project
+## Unit Tests
 
-Current project status:
+Unit tests validate domain and application behavior in isolation.
 
-- 109 Unit Tests
-- 0 Failing Unit Tests
+Current coverage includes:
+
+- Aggregates
+- Value Objects
+- Domain business rules
+- Application handlers
+- Deterministic AI analysis
+- AI provider fallback behavior
+
+Unit tests use xUnit and follow the Arrange / Act / Assert pattern.
 
 AI unit tests do not require Ollama to be running. The AI provider is abstracted through `IAiInsightsGenerator`, allowing the Application layer to be tested deterministically.
 
----
+## Integration Tests
+
+Backend integration tests exercise NexusERP through the real application stack:
+
+```text
+xUnit
+  |
+  v
+WebApplicationFactory
+  |
+  v
+NexusERP.Api
+  |
+  v
+Authentication / Authorization
+  |
+  v
+Application
+  |
+  v
+Infrastructure
+  |
+  v
+Entity Framework Core
+  |
+  v
+SQL Server Testcontainer
+```
+
+Integration tests use:
+
+- xUnit
+- `Microsoft.AspNetCore.Mvc.Testing`
+- `WebApplicationFactory`
+- Testcontainers for .NET
+- Real SQL Server
+- Real Entity Framework Core migrations
+
+The integration test suite currently covers:
+
+- API startup
+- Protected endpoint behavior
+- Valid and invalid authentication
+- Inactive user authentication
+- JWT authentication through the real HTTP pipeline
+- Role-based authorization
+- Customer write/read persistence
+- Successful sales order confirmation
+- Inventory reduction after sales confirmation
+- Insufficient-stock consistency
+- Multi-item sales confirmation without partial inventory changes
+
+## Integration Test Isolation
+
+Integration tests run against a disposable SQL Server container.
+
+They do not use the normal NexusERP development database or development database credentials.
+
+The test infrastructure:
+
+1. Starts a SQL Server container.
+2. Starts NexusERP through `WebApplicationFactory`.
+3. Overrides the database and JWT configuration with test-only values.
+4. Applies the real Entity Framework Core migrations.
+5. Executes the integration test suite.
+6. Disposes the API test host and SQL Server container.
+
+Test data uses isolated identifiers and does not depend on execution order.
+
+## Running Tests
+
+Run the complete backend test suite:
+
+```bash
+cd backend
+dotnet test
+```
+
+Run only unit tests:
+
+```bash
+dotnet test tests/NexusERP.UnitTests
+```
+
+Run only integration tests:
+
+```bash
+dotnet test tests/NexusERP.IntegrationTests
+```
+
+### Integration Test Requirement
+
+Docker must be running when executing `NexusERP.IntegrationTests`.
+
+Testcontainers automatically manages the temporary SQL Server instance, so no manually configured integration-test database is required.
+
+Docker is not required to run the unit test suite.
+
+## Current Test Status
+
+- 109 unit tests
+- 17 integration tests
+- 126 total automated backend tests
+- 0 failing tests
 
 # Documentation
 
@@ -363,7 +467,6 @@ Features that do not require persistence changes do not introduce database migra
 
 ## Planned
 
-- Additional AI capabilities
 - Microservices evolution
 - Warehouse
 - Accounting

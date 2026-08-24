@@ -149,7 +149,11 @@ app.MapDeactivateUser();
 
 app.UseGlobalExceptionHandling();
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsEnvironment(
+        "IntegrationTesting"))
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseCors("Frontend");
 
@@ -208,3 +212,5 @@ app.MapGetDashboard();
 app.MapGetBusinessInsights();
 
 app.Run();
+
+public partial class Program;
