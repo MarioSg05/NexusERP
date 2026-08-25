@@ -71,6 +71,8 @@ public static class DependencyInjection
 
         services.AddScoped<OutboxMessageFactory>();
 
+        services.AddScoped<OutboxProcessor>();
+
         return services;
     }
 }
