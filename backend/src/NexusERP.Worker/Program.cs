@@ -20,6 +20,9 @@ builder.Services.Configure<OutboxWorkerSettings>(
 
 builder.Services.AddHostedService<OutboxWorker>();
 
+builder.Services.AddHostedService<
+    IntegrationEventConsumerWorker>();
+
 var host =
     builder.Build();
 

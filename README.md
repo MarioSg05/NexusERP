@@ -477,6 +477,7 @@ Features that do not require persistence changes do not introduce database migra
 - Integration Event mapping to the Outbox
 - Outbox processor foundation
 - RabbitMQ Outbox Worker
+- RabbitMQ Integration Event consumer
 
 ## Planned
 

@@ -21,6 +21,13 @@ public static class MessagingDependencyInjection
             IIntegrationEventPublisher,
             RabbitMqIntegrationEventPublisher>();
 
+        services.Configure<RabbitMqConsumerSettings>(
+            configuration.GetSection(
+                RabbitMqConsumerSettings.SectionName));
+
+        services.AddSingleton<
+            RabbitMqIntegrationEventConsumer>();
+
         services.AddScoped<OutboxMessageFactory>();
 
         services.AddScoped<OutboxProcessor>();
