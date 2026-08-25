@@ -24,6 +24,11 @@ public static class EventProcessingDependencyInjection
             IIntegrationEventMapper<SalesOrderConfirmedEvent>,
             SalesOrderConfirmedIntegrationEventMapper>();
 
+        services.AddScoped<
+            IIntegrationEventHandler<
+                SalesOrderConfirmedIntegrationEvent>,
+            SalesOrderConfirmedIntegrationEventHandler>();
+
         return services;
     }
 }
