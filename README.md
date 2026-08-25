@@ -52,6 +52,7 @@ Core architectural principles:
 - Entity Framework Core
 - Minimal APIs
 - Reliable Outbox processing
+- Asynchronous messaging with RabbitMQ
 
 ---
 
@@ -89,7 +90,9 @@ Core architectural principles:
 - Docker
 - SQL Server container
 - Redis (planned)
-- RabbitMQ (planned)
+- RabbitMQ
+- .NET Worker Service
+- Testcontainers
 
 ---
 
@@ -473,6 +476,7 @@ Features that do not require persistence changes do not introduce database migra
 - Transactional Outbox persistence
 - Integration Event mapping to the Outbox
 - Outbox processor foundation
+- RabbitMQ Outbox Worker
 
 ## Planned
 
