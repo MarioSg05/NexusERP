@@ -47,6 +47,7 @@ Core architectural principles:
 - Dependency Inversion
 - CQRS-style Application Layer
 - In-process Domain Event dispatching
+- Transactional Outbox persistence
 - Entity Framework Core
 - Minimal APIs
 
@@ -467,6 +468,7 @@ Features that do not require persistence changes do not introduce database migra
 - AI Business Insights foundation
 - Backend integration testing foundation
 - In-process Domain Event dispatching
+- Transactional Outbox persistence
 
 ## Planned
 
