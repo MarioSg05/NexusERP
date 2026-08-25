@@ -21,10 +21,18 @@ public sealed class OutboxMessage
     }
 
     public static OutboxMessage Create(
+        Guid id,
         DateTime occurredOnUtc,
         string type,
         string payload)
     {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException(
+                "Outbox message identifier is required.",
+                nameof(id));
+        }
+
         ArgumentException.ThrowIfNullOrWhiteSpace(
             type);
 
@@ -33,7 +41,7 @@ public sealed class OutboxMessage
 
         return new OutboxMessage
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             OccurredOnUtc = occurredOnUtc,
             Type = type.Trim(),
             Payload = payload

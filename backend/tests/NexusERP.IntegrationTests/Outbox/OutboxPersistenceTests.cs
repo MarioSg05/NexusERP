@@ -29,6 +29,7 @@ public sealed class OutboxPersistenceTests
 
         var message =
             OutboxMessage.Create(
+                Guid.NewGuid(),
                 DateTime.UtcNow,
                 "TestIntegrationEvent",
                 """
@@ -91,6 +92,7 @@ public sealed class OutboxPersistenceTests
 
         var message =
             OutboxMessage.Create(
+                Guid.NewGuid(),
                 DateTime.UtcNow,
                 "CustomerRegisteredIntegrationEvent",
                 $$"""
@@ -171,6 +173,7 @@ public sealed class OutboxPersistenceTests
 
         var message =
             OutboxMessage.Create(
+                Guid.NewGuid(),
                 DateTime.UtcNow,
                 "CustomerRegisteredIntegrationEvent",
                 $$"""

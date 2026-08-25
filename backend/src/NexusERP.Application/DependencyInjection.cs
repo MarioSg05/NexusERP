@@ -45,6 +45,9 @@ using NexusERP.Application.Suppliers.ActivateSupplier;
 using NexusERP.Application.Suppliers.DeactivateSupplier;
 using NexusERP.Application.AI.BusinessInsights;
 using NexusERP.Application.Common.DomainEvents;
+using NexusERP.Application.Common.IntegrationEvents;
+using NexusERP.Application.Sales.IntegrationEvents;
+using NexusERP.Domain.Sales.Events;
 
 namespace NexusERP.Application;
 
@@ -156,6 +159,15 @@ public static class DependencyInjection
         services.AddScoped<
             IDomainEventDispatcher,
             DomainEventDispatcher>();
+
+        // Integration Events
+        services.AddScoped<
+            IIntegrationEventCollector,
+            IntegrationEventCollector>();
+
+        services.AddScoped<
+            IIntegrationEventMapper<SalesOrderConfirmedEvent>,
+            SalesOrderConfirmedIntegrationEventMapper>();
 
         return services;
     }

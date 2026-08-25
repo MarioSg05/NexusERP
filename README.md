@@ -48,6 +48,7 @@ Core architectural principles:
 - CQRS-style Application Layer
 - In-process Domain Event dispatching
 - Transactional Outbox persistence
+- Integration Event mapping
 - Entity Framework Core
 - Minimal APIs
 
@@ -469,6 +470,7 @@ Features that do not require persistence changes do not introduce database migra
 - Backend integration testing foundation
 - In-process Domain Event dispatching
 - Transactional Outbox persistence
+- Integration Event mapping to the Outbox
 
 ## Planned
 

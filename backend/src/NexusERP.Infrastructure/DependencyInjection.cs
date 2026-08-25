@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using NexusERP.Infrastructure.Identity.Jwt;
 using NexusERP.Infrastructure.Persistence.Queries;
 using NexusERP.Infrastructure.AI;
+using NexusERP.Infrastructure.Messaging.Outbox;
 
 namespace NexusERP.Infrastructure;
 
@@ -67,6 +68,8 @@ public static class DependencyInjection
         services.AddScoped<IPurchasingQueries, PurchasingQueries>();
 
         services.AddScoped<ISalesQueries, SalesQueries>();
+
+        services.AddScoped<OutboxMessageFactory>();
 
         return services;
     }
