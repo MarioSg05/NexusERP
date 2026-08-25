@@ -19,6 +19,7 @@ using NexusERP.Domain.Sales.Enums;
 using NexusERP.Domain.Sales.ValueObjects;
 using NexusERP.Infrastructure.Persistence;
 using NexusERP.IntegrationTests.Infrastructure;
+using System.Text.Json;
 
 namespace NexusERP.IntegrationTests.Sales;
 
@@ -95,6 +96,16 @@ public sealed class SalesConfirmationTests
                     x => x.ProductId ==
                         scenario.ProductId);
 
+        var outboxMessage =
+            await dbContext.OutboxMessages
+                .AsNoTracking()
+                .SingleAsync(
+                    x =>
+                        x.Type ==
+                            "sales-order-confirmed" &&
+                        x.Payload.Contains(
+                            scenario.SalesOrderId.ToString()));
+
         Assert.Equal(
             SalesOrderStatus.Confirmed,
             persistedOrder.Status);
@@ -102,6 +113,44 @@ public sealed class SalesConfirmationTests
         Assert.Equal(
             7,
             persistedInventory.Quantity.Value);
+
+        Assert.NotEqual(
+    Guid.Empty,
+    outboxMessage.Id);
+
+        Assert.Equal(
+            "sales-order-confirmed",
+            outboxMessage.Type);
+
+        Assert.Null(
+            outboxMessage.ProcessedOnUtc);
+
+        Assert.Null(
+            outboxMessage.Error);
+
+        using var payload =
+            JsonDocument.Parse(
+                outboxMessage.Payload);
+
+        var payloadRoot =
+            payload.RootElement;
+
+        Assert.Equal(
+            outboxMessage.Id,
+            payloadRoot
+                .GetProperty("id")
+                .GetGuid());
+
+        Assert.Equal(
+            scenario.SalesOrderId,
+            payloadRoot
+                .GetProperty("salesOrderId")
+                .GetGuid());
+
+        Assert.True(
+            payloadRoot.TryGetProperty(
+                "occurredOnUtc",
+                out _));
     }
 
     [Fact]
@@ -151,6 +200,19 @@ public sealed class SalesConfirmationTests
                 .SingleAsync(
                     x => x.ProductId ==
                         scenario.ProductId);
+
+        var outboxMessageExists =
+            await dbContext.OutboxMessages
+                .AsNoTracking()
+                .AnyAsync(
+                    x =>
+                        x.Type ==
+                            "sales-order-confirmed" &&
+                        x.Payload.Contains(
+                            scenario.SalesOrderId.ToString()));
+
+        Assert.False(
+            outboxMessageExists);
 
         Assert.Equal(
             SalesOrderStatus.Pending,
@@ -213,6 +275,19 @@ public sealed class SalesConfirmationTests
                 .SingleAsync(
                     x => x.ProductId ==
                         scenario.SecondProductId);
+
+        var outboxMessageExists =
+            await dbContext.OutboxMessages
+                .AsNoTracking()
+                .AnyAsync(
+                    x =>
+                        x.Type ==
+                            "sales-order-confirmed" &&
+                        x.Payload.Contains(
+                            scenario.SalesOrderId.ToString()));
+
+        Assert.False(
+            outboxMessageExists);
 
         Assert.Equal(
             SalesOrderStatus.Pending,

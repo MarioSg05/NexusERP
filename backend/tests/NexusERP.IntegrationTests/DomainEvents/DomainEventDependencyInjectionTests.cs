@@ -9,6 +9,7 @@ using NexusERP.Domain.Customers.Events;
 using NexusERP.Domain.Customers.ValueObjects;
 using NexusERP.Infrastructure.Persistence;
 using NexusERP.IntegrationTests.Infrastructure;
+using NexusERP.Infrastructure.Messaging.Outbox;
 
 namespace NexusERP.IntegrationTests.DomainEvents;
 
@@ -30,6 +31,8 @@ public sealed class DomainEventDependencyInjectionTests
             new ServiceCollection();
 
         services.AddApplication();
+
+        services.AddScoped<OutboxMessageFactory>();
 
         services.AddDbContext<ApplicationDbContext>(
             options =>

@@ -8,6 +8,8 @@ using NexusERP.Domain.Customers.Events;
 using NexusERP.Domain.Customers.ValueObjects;
 using NexusERP.Infrastructure.Persistence;
 using NexusERP.IntegrationTests.Infrastructure;
+using NexusERP.Application.Common.IntegrationEvents;
+using NexusERP.Infrastructure.Messaging.Outbox;
 
 namespace NexusERP.IntegrationTests.DomainEvents;
 
@@ -116,7 +118,7 @@ public sealed class DomainEventPersistenceTests
     }
 
     private ApplicationDbContext CreateDbContext(
-        IDomainEventDispatcher dispatcher)
+    IDomainEventDispatcher dispatcher)
     {
         var options =
             new DbContextOptionsBuilder<
@@ -127,7 +129,9 @@ public sealed class DomainEventPersistenceTests
 
         return new ApplicationDbContext(
             options,
-            dispatcher);
+            dispatcher,
+            new EmptyIntegrationEventCollector(),
+            new OutboxMessageFactory());
     }
 
     private async Task SeedCustomerAsync(
@@ -186,6 +190,16 @@ public sealed class DomainEventPersistenceTests
                 domainEvents);
 
             return Task.CompletedTask;
+        }
+    }
+
+    private sealed class EmptyIntegrationEventCollector
+    : IIntegrationEventCollector
+    {
+        public IReadOnlyCollection<IIntegrationEvent> Collect(
+            IReadOnlyCollection<IDomainEvent> domainEvents)
+        {
+            return [];
         }
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using NexusERP.Application.Common.DomainEvents;
+using NexusERP.Application.Common.IntegrationEvents;
 using NexusERP.Application.Common.Interfaces;
 using NexusERP.Domain.Common;
 using NexusERP.Domain.Customers.Aggregates;
@@ -20,13 +21,27 @@ public sealed class ApplicationDbContext
     private readonly IDomainEventDispatcher
         _domainEventDispatcher;
 
+    private readonly IIntegrationEventCollector
+        _integrationEventCollector;
+
+    private readonly OutboxMessageFactory
+        _outboxMessageFactory;
+
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
-        IDomainEventDispatcher domainEventDispatcher)
+        IDomainEventDispatcher domainEventDispatcher,
+        IIntegrationEventCollector integrationEventCollector,
+        OutboxMessageFactory outboxMessageFactory)
         : base(options)
     {
         _domainEventDispatcher =
             domainEventDispatcher;
+
+        _integrationEventCollector =
+            integrationEventCollector;
+
+        _outboxMessageFactory =
+            outboxMessageFactory;
     }
 
     public DbSet<User> Users =>
@@ -72,6 +87,23 @@ public sealed class ApplicationDbContext
                     aggregate =>
                         aggregate.DomainEvents)
                 .ToList();
+
+        var integrationEvents =
+            _integrationEventCollector
+                .Collect(
+                    domainEvents);
+
+        var outboxMessages =
+            integrationEvents
+                .Select(
+                    _outboxMessageFactory.Create)
+                .ToList();
+
+        if (outboxMessages.Count > 0)
+        {
+            OutboxMessages.AddRange(
+                outboxMessages);
+        }
 
         var result =
             await base.SaveChangesAsync(
