@@ -10,4 +10,22 @@ public sealed class RabbitMqConsumerSettings
 
     public string RoutingKey { get; init; } =
         "sales-order-confirmed";
+
+    public string RetryExchangeName { get; init; } =
+        "nexuserp.retry";
+
+    public string RetryQueueName { get; init; } =
+        "nexuserp.sales-order-confirmed.retry";
+
+    public string DeadLetterExchangeName { get; init; } =
+        "nexuserp.dead-letter";
+
+    public string DeadLetterQueueName { get; init; } =
+        "nexuserp.sales-order-confirmed.dlq";
+
+    public int MaxRetryAttempts { get; init; } =
+        3;
+
+    public int RetryDelaySeconds { get; init; } =
+        5;
 }

@@ -31,15 +31,20 @@ public sealed class RabbitMqIntegrationEventConsumer
         RabbitMqIntegrationEventConsumer>
         _logger;
 
+    private readonly RabbitMqRetryPolicy
+    _retryPolicy;
+
     private IConnection? _connection;
 
     private IChannel? _channel;
+
 
     public RabbitMqIntegrationEventConsumer(
         IOptions<RabbitMqSettings> rabbitMqOptions,
         IOptions<RabbitMqConsumerSettings> consumerOptions,
         IServiceScopeFactory scopeFactory,
-        ILogger<RabbitMqIntegrationEventConsumer> logger)
+        ILogger<RabbitMqIntegrationEventConsumer> logger,
+        RabbitMqRetryPolicy retryPolicy)
     {
         _rabbitMqSettings =
             rabbitMqOptions.Value;
@@ -52,6 +57,100 @@ public sealed class RabbitMqIntegrationEventConsumer
 
         _logger =
             logger;
+
+        _retryPolicy =
+            retryPolicy;
+    }
+
+    private async Task PublishForRetryAsync(
+    BasicDeliverEventArgs args,
+    int retryCount)
+    {
+        if (_channel is null)
+        {
+            throw new InvalidOperationException(
+                "RabbitMQ channel is not available.");
+        }
+
+        var properties =
+            CreateForwardProperties(
+                args.BasicProperties);
+
+        properties.Headers ??=
+            new Dictionary<string, object?>();
+
+        properties.Headers[
+            RabbitMqRetryHeaders.RetryCount] =
+                retryCount;
+
+        await _channel.BasicPublishAsync(
+            exchange:
+                _consumerSettings.RetryExchangeName,
+            routingKey:
+                _consumerSettings.RoutingKey,
+            mandatory:
+                true,
+            basicProperties:
+                properties,
+            body:
+                args.Body);
+    }
+
+    private async Task PublishToDeadLetterAsync(
+        BasicDeliverEventArgs args)
+    {
+        if (_channel is null)
+        {
+            throw new InvalidOperationException(
+                "RabbitMQ channel is not available.");
+        }
+
+        var properties =
+            CreateForwardProperties(
+                args.BasicProperties);
+
+        await _channel.BasicPublishAsync(
+            exchange:
+                _consumerSettings
+                    .DeadLetterExchangeName,
+            routingKey:
+                _consumerSettings.RoutingKey,
+            mandatory:
+                true,
+            basicProperties:
+                properties,
+            body:
+                args.Body);
+    }
+
+    private static BasicProperties
+        CreateForwardProperties(
+            IReadOnlyBasicProperties source)
+    {
+        return new BasicProperties
+        {
+            MessageId =
+                source.MessageId,
+
+            ContentType =
+                source.ContentType,
+
+            Type =
+                source.Type,
+
+            DeliveryMode =
+                DeliveryModes.Persistent,
+
+            Headers =
+                source.Headers is null
+                    ? new Dictionary<
+                        string,
+                        object?>()
+                    : new Dictionary<
+                        string,
+                        object?>(
+                            source.Headers)
+        };
     }
 
     public async Task StartAsync(
@@ -92,6 +191,34 @@ public sealed class RabbitMqIntegrationEventConsumer
             cancellationToken:
                 cancellationToken);
 
+        await _channel.ExchangeDeclareAsync(
+            exchange:
+                _consumerSettings.RetryExchangeName,
+            type:
+                ExchangeType.Direct,
+            durable:
+                true,
+            autoDelete:
+                false,
+            arguments:
+                null,
+            cancellationToken:
+                cancellationToken);
+
+        await _channel.ExchangeDeclareAsync(
+            exchange:
+                _consumerSettings.DeadLetterExchangeName,
+            type:
+                ExchangeType.Direct,
+            durable:
+                true,
+            autoDelete:
+                false,
+            arguments:
+                null,
+            cancellationToken:
+                cancellationToken);
+
         await _channel.QueueDeclareAsync(
             queue:
                 _consumerSettings.QueueName,
@@ -111,6 +238,72 @@ public sealed class RabbitMqIntegrationEventConsumer
                 _consumerSettings.QueueName,
             exchange:
                 _rabbitMqSettings.ExchangeName,
+            routingKey:
+                _consumerSettings.RoutingKey,
+            arguments:
+                null,
+            cancellationToken:
+                cancellationToken);
+
+        var retryQueueArguments =
+            new Dictionary<string, object?>
+            {
+                ["x-message-ttl"] =
+                    _consumerSettings.RetryDelaySeconds *
+                    1000,
+
+                ["x-dead-letter-exchange"] =
+                    _rabbitMqSettings.ExchangeName,
+
+                ["x-dead-letter-routing-key"] =
+                    _consumerSettings.RoutingKey
+            };
+
+        await _channel.QueueDeclareAsync(
+            queue:
+                _consumerSettings.RetryQueueName,
+            durable:
+                true,
+            exclusive:
+                false,
+            autoDelete:
+                false,
+            arguments:
+                retryQueueArguments,
+            cancellationToken:
+                cancellationToken);
+
+        await _channel.QueueBindAsync(
+            queue:
+                _consumerSettings.RetryQueueName,
+            exchange:
+                _consumerSettings.RetryExchangeName,
+            routingKey:
+                _consumerSettings.RoutingKey,
+            arguments:
+                null,
+            cancellationToken:
+                cancellationToken);
+
+        await _channel.QueueDeclareAsync(
+            queue:
+                _consumerSettings.DeadLetterQueueName,
+            durable:
+                true,
+            exclusive:
+                false,
+            autoDelete:
+                false,
+            arguments:
+                null,
+            cancellationToken:
+                cancellationToken);
+
+        await _channel.QueueBindAsync(
+            queue:
+                _consumerSettings.DeadLetterQueueName,
+            exchange:
+                _consumerSettings.DeadLetterExchangeName,
             routingKey:
                 _consumerSettings.RoutingKey,
             arguments:
@@ -210,14 +403,48 @@ public sealed class RabbitMqIntegrationEventConsumer
         }
         catch (Exception exception)
         {
+            var retryCount =
+                _retryPolicy.GetRetryCount(
+                    args.BasicProperties);
+
             _logger.LogError(
                 exception,
-                "Failed to process RabbitMQ message {MessageId} of type {MessageType}.",
+                "Failed to process RabbitMQ message {MessageId} of type {MessageType}. Retry count: {RetryCount}.",
                 args.BasicProperties.MessageId,
-                args.BasicProperties.Type);
+                args.BasicProperties.Type,
+                retryCount);
 
-            await RejectAsync(
-                args.DeliveryTag);
+            if (_retryPolicy.ShouldRetry(
+                    retryCount))
+            {
+                var nextRetryCount =
+                    retryCount + 1;
+
+                await PublishForRetryAsync(
+                    args,
+                    nextRetryCount);
+
+                _logger.LogWarning(
+                    "RabbitMQ message {MessageId} scheduled for retry {RetryCount}.",
+                    args.BasicProperties.MessageId,
+                    nextRetryCount);
+            }
+            else
+            {
+                await PublishToDeadLetterAsync(
+                    args);
+
+                _logger.LogError(
+                    "RabbitMQ message {MessageId} moved to the dead-letter queue after {RetryCount} retries.",
+                    args.BasicProperties.MessageId,
+                    retryCount);
+            }
+
+            await _channel.BasicAckAsync(
+                deliveryTag:
+                    args.DeliveryTag,
+                multiple:
+                    false);
         }
     }
 
@@ -266,6 +493,46 @@ public sealed class RabbitMqIntegrationEventConsumer
         {
             throw new InvalidOperationException(
                 "RabbitMQ consumer routing key is not configured.");
+        }
+
+        if (string.IsNullOrWhiteSpace(
+        _consumerSettings.RetryExchangeName))
+        {
+            throw new InvalidOperationException(
+                "RabbitMQ retry exchange name is not configured.");
+        }
+
+        if (string.IsNullOrWhiteSpace(
+                _consumerSettings.RetryQueueName))
+        {
+            throw new InvalidOperationException(
+                "RabbitMQ retry queue name is not configured.");
+        }
+
+        if (string.IsNullOrWhiteSpace(
+                _consumerSettings.DeadLetterExchangeName))
+        {
+            throw new InvalidOperationException(
+                "RabbitMQ dead-letter exchange name is not configured.");
+        }
+
+        if (string.IsNullOrWhiteSpace(
+                _consumerSettings.DeadLetterQueueName))
+        {
+            throw new InvalidOperationException(
+                "RabbitMQ dead-letter queue name is not configured.");
+        }
+
+        if (_consumerSettings.MaxRetryAttempts <= 0)
+        {
+            throw new InvalidOperationException(
+                "RabbitMQ maximum retry attempts must be greater than zero.");
+        }
+
+        if (_consumerSettings.RetryDelaySeconds <= 0)
+        {
+            throw new InvalidOperationException(
+                "RabbitMQ retry delay must be greater than zero.");
         }
     }
 
