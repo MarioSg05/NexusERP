@@ -12,6 +12,7 @@ using NexusERP.Domain.Purchasing.Aggregates;
 using NexusERP.Domain.Sales.Aggregates;
 using NexusERP.Domain.Suppliers.Aggregates;
 using NexusERP.Infrastructure.Messaging.Outbox;
+using NexusERP.Infrastructure.Messaging.Inbox;
 
 namespace NexusERP.Infrastructure.Persistence;
 
@@ -67,6 +68,9 @@ public sealed class ApplicationDbContext
 
     public DbSet<OutboxMessage> OutboxMessages =>
         Set<OutboxMessage>();
+
+    public DbSet<InboxMessage> InboxMessages =>
+        Set<InboxMessage>();
 
     public override async Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
