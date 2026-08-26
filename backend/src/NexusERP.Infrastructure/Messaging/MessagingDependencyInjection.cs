@@ -26,6 +26,19 @@ public static class MessagingDependencyInjection
             configuration.GetSection(
                 RabbitMqConsumerSettings.SectionName));
 
+        services.AddSingleton(
+            serviceProvider =>
+            {
+                var options =
+                    serviceProvider
+                        .GetRequiredService<
+                            Microsoft.Extensions.Options.IOptions<
+                                RabbitMqConsumerSettings>>();
+
+                return new RabbitMqRetryPolicy(
+                    options.Value);
+            });
+
         services.AddSingleton<
             RabbitMqIntegrationEventConsumer>();
 

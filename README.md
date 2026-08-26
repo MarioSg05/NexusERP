@@ -479,6 +479,7 @@ Features that do not require persistence changes do not introduce database migra
 - RabbitMQ Outbox Worker
 - RabbitMQ Integration Event consumer
 - Transactional Inbox and idempotent event consumption
+- RabbitMQ retry and dead-letter handling
 
 ## Planned
 

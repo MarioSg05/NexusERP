@@ -457,8 +457,30 @@ public sealed class RabbitMqIntegrationEventConsumerTests
                         queueName,
 
                     RoutingKey =
-                        "sales-order-confirmed"
+                        "sales-order-confirmed",
+
+                    RetryExchangeName =
+                        $"{exchangeName}.retry",
+
+                    RetryQueueName =
+                        $"{queueName}.retry",
+
+                    DeadLetterExchangeName =
+                        $"{exchangeName}.dead-letter",
+
+                    DeadLetterQueueName =
+                        $"{queueName}.dlq",
+
+                    MaxRetryAttempts =
+                        3,
+
+                    RetryDelaySeconds =
+                        1
                 });
+
+        var retryPolicy =
+            new RabbitMqRetryPolicy(
+                consumerSettings.Value);
 
         return new RabbitMqIntegrationEventConsumer(
             rabbitMqSettings,
@@ -466,7 +488,8 @@ public sealed class RabbitMqIntegrationEventConsumerTests
             serviceProvider.GetRequiredService<
                 IServiceScopeFactory>(),
             NullLogger<
-                RabbitMqIntegrationEventConsumer>.Instance);
+                RabbitMqIntegrationEventConsumer>.Instance,
+            retryPolicy);
     }
 
     private async Task PublishAsync(
