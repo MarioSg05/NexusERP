@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NexusERP.Application.Common.IntegrationEvents;
 using NexusERP.Infrastructure.Messaging.Outbox;
 using NexusERP.Infrastructure.Messaging.RabbitMq;
+using NexusERP.Infrastructure.Messaging.Inbox;
 
 namespace NexusERP.Infrastructure.Messaging;
 
@@ -31,6 +32,9 @@ public static class MessagingDependencyInjection
         services.AddScoped<OutboxMessageFactory>();
 
         services.AddScoped<OutboxProcessor>();
+
+        services.AddScoped<
+            IntegrationEventInboxProcessor>();
 
         return services;
     }
