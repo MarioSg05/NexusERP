@@ -2,6 +2,7 @@ using System.Text;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 
@@ -130,6 +131,28 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Health
+app.MapHealthChecks(
+        "/health/live",
+        new HealthCheckOptions
+        {
+            Predicate =
+                _ => false
+        })
+    .AllowAnonymous();
+
+app.MapHealthChecks(
+        "/health/ready",
+        new HealthCheckOptions
+        {
+            Predicate =
+                registration =>
+                    registration.Tags
+                        .Contains(
+                            "ready")
+        })
+    .AllowAnonymous();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -160,7 +183,6 @@ app.UseCors("Frontend");
 app.UseAuthentication();
 
 app.UseAuthorization();
-
 
 // Sales Master Data
 app.MapRegisterCustomer();

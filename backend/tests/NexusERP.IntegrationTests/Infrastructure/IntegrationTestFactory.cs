@@ -7,12 +7,21 @@ namespace NexusERP.IntegrationTests.Infrastructure;
 public sealed class IntegrationTestFactory
     : WebApplicationFactory<Program>
 {
-    private readonly string _connectionString;
+    private readonly string
+        _connectionString;
+
+    private readonly string?
+        _rabbitMqConnectionString;
 
     public IntegrationTestFactory(
-        string connectionString)
+        string connectionString,
+        string? rabbitMqConnectionString = null)
     {
-        _connectionString = connectionString;
+        _connectionString =
+            connectionString;
+
+        _rabbitMqConnectionString =
+            rabbitMqConnectionString;
     }
 
     protected override void ConfigureWebHost(
@@ -42,6 +51,14 @@ public sealed class IntegrationTestFactory
                         ["Jwt:ExpirationMinutes"] =
                             "60"
                     };
+
+                if (!string.IsNullOrWhiteSpace(
+                        _rabbitMqConnectionString))
+                {
+                    configuration[
+                        "RabbitMq:ConnectionString"] =
+                            _rabbitMqConnectionString;
+                }
 
                 configurationBuilder
                     .AddInMemoryCollection(

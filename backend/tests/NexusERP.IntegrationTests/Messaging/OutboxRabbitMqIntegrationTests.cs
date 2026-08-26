@@ -2,6 +2,7 @@ using System.Text;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
 using NexusERP.Infrastructure.Messaging.Outbox;
@@ -130,7 +131,9 @@ public sealed class OutboxRabbitMqIntegrationTests
             var processor =
                 new OutboxProcessor(
                     dbContext,
-                    publisher);
+                    publisher,
+                    NullLogger<
+                        OutboxProcessor>.Instance);
 
             var processedCount =
                 await processor.ProcessAsync(
@@ -190,4 +193,4 @@ public sealed class OutboxRabbitMqIntegrationTests
         Assert.Null(
             persistedMessage.Error);
     }
-}       
+}
