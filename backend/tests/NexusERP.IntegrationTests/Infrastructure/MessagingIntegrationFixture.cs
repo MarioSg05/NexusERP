@@ -9,6 +9,12 @@ public sealed class MessagingIntegrationFixture
     public RabbitMqFixture RabbitMq { get; } =
         new();
 
+    public IntegrationTestFactory Factory
+    {
+        get;
+        private set;
+    } = null!;
+
     public async Task InitializeAsync()
     {
         await SqlServer.InitializeAsync();
@@ -16,6 +22,11 @@ public sealed class MessagingIntegrationFixture
         try
         {
             await RabbitMq.InitializeAsync();
+
+            Factory =
+                new IntegrationTestFactory(
+                    SqlServer.ConnectionString,
+                    RabbitMq.ConnectionString);
         }
         catch
         {
@@ -27,6 +38,11 @@ public sealed class MessagingIntegrationFixture
 
     public async Task DisposeAsync()
     {
+        if (Factory is not null)
+        {
+            await Factory.DisposeAsync();
+        }
+
         await RabbitMq.DisposeAsync();
 
         await SqlServer.DisposeAsync();

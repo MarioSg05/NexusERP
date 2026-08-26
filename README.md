@@ -456,6 +456,15 @@ Features that do not require persistence changes do not introduce database migra
 
 ---
 
+## Health Checks
+
+NexusERP exposes separate liveness and readiness endpoints:
+
+- `GET /health/live` verifies that the API process is running.
+- `GET /health/ready` verifies SQL Server and RabbitMQ connectivity.
+
+The readiness endpoint returns `503 Service Unavailable` when a required dependency is unavailable.
+
 # Roadmap
 
 ## Completed
@@ -480,6 +489,7 @@ Features that do not require persistence changes do not introduce database migra
 - RabbitMQ Integration Event consumer
 - Transactional Inbox and idempotent event consumption
 - RabbitMQ retry and dead-letter handling
+- Messaging health checks and observability
 
 ## Planned
 

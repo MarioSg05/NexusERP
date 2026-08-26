@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 
 using NexusERP.Application.Common.IntegrationEvents;
 using NexusERP.Infrastructure.Messaging.Outbox;
@@ -11,12 +12,14 @@ namespace NexusERP.IntegrationTests.Outbox;
 [Collection(IntegrationTestCollection.Name)]
 public sealed class OutboxProcessorTests
 {
-    private readonly SqlServerFixture _sqlServer;
+    private readonly SqlServerFixture
+        _sqlServer;
 
     public OutboxProcessorTests(
         SqlServerFixture sqlServer)
     {
-        _sqlServer = sqlServer;
+        _sqlServer =
+            sqlServer;
     }
 
     private async Task ClearOutboxMessagesAsync()
@@ -312,7 +315,9 @@ public sealed class OutboxProcessorTests
         var processor =
             new OutboxProcessor(
                 dbContext,
-                publisher);
+                publisher,
+                NullLogger<
+                    OutboxProcessor>.Instance);
 
         return await processor.ProcessAsync(
             batchSize);
@@ -388,7 +393,8 @@ public sealed class OutboxProcessorTests
         ThrowingIntegrationEventPublisher
         : IIntegrationEventPublisher
     {
-        private readonly string _message;
+        private readonly string
+            _message;
 
         public ThrowingIntegrationEventPublisher(
             string message)

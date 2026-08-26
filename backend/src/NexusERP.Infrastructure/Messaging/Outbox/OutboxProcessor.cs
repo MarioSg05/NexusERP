@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 using NexusERP.Application.Common.IntegrationEvents;
 using NexusERP.Infrastructure.Persistence;
@@ -7,15 +8,28 @@ namespace NexusERP.Infrastructure.Messaging.Outbox;
 
 public sealed class OutboxProcessor
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly IIntegrationEventPublisher _publisher;
+    private readonly ApplicationDbContext
+        _dbContext;
+
+    private readonly IIntegrationEventPublisher
+        _publisher;
+
+    private readonly ILogger<OutboxProcessor>
+        _logger;
 
     public OutboxProcessor(
         ApplicationDbContext dbContext,
-        IIntegrationEventPublisher publisher)
+        IIntegrationEventPublisher publisher,
+        ILogger<OutboxProcessor> logger)
     {
-        _dbContext = dbContext;
-        _publisher = publisher;
+        _dbContext =
+            dbContext;
+
+        _publisher =
+            publisher;
+
+        _logger =
+            logger;
     }
 
     public async Task<int> ProcessAsync(
@@ -41,11 +55,13 @@ public sealed class OutboxProcessor
                 .ThenBy(
                     message =>
                         message.Id)
-                .Take(batchSize)
+                .Take(
+                    batchSize)
                 .ToListAsync(
                     cancellationToken);
 
-        var processedCount = 0;
+        var processedCount =
+            0;
 
         foreach (var message in messages)
         {
@@ -63,6 +79,11 @@ public sealed class OutboxProcessor
                 message.MarkAsProcessed(
                     DateTime.UtcNow);
 
+                _logger.LogInformation(
+                    "Published Outbox message {MessageId} of type {MessageType}.",
+                    message.Id,
+                    message.Type);
+
                 processedCount++;
             }
             catch (OperationCanceledException)
@@ -74,6 +95,12 @@ public sealed class OutboxProcessor
             {
                 message.SetError(
                     exception.Message);
+
+                _logger.LogError(
+                    exception,
+                    "Failed to publish Outbox message {MessageId} of type {MessageType}.",
+                    message.Id,
+                    message.Type);
             }
 
             await _dbContext.SaveChangesAsync(

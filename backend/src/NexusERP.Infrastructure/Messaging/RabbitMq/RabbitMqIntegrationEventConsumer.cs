@@ -32,12 +32,11 @@ public sealed class RabbitMqIntegrationEventConsumer
         _logger;
 
     private readonly RabbitMqRetryPolicy
-    _retryPolicy;
+        _retryPolicy;
 
     private IConnection? _connection;
 
     private IChannel? _channel;
-
 
     public RabbitMqIntegrationEventConsumer(
         IOptions<RabbitMqSettings> rabbitMqOptions,
@@ -63,8 +62,8 @@ public sealed class RabbitMqIntegrationEventConsumer
     }
 
     private async Task PublishForRetryAsync(
-    BasicDeliverEventArgs args,
-    int retryCount)
+        BasicDeliverEventArgs args,
+        int retryCount)
     {
         if (_channel is null)
         {
@@ -392,8 +391,24 @@ public sealed class RabbitMqIntegrationEventConsumer
                     .GetRequiredService<
                         IntegrationEventInboxProcessor>();
 
-            await inboxProcessor.ProcessAsync(
-                integrationEvent);
+            var processed =
+                await inboxProcessor.ProcessAsync(
+                    integrationEvent);
+
+            if (processed)
+            {
+                _logger.LogInformation(
+                    "Processed RabbitMQ message {MessageId} of type {MessageType}.",
+                    args.BasicProperties.MessageId,
+                    args.BasicProperties.Type);
+            }
+            else
+            {
+                _logger.LogInformation(
+                    "Skipped duplicate RabbitMQ message {MessageId} of type {MessageType}.",
+                    args.BasicProperties.MessageId,
+                    args.BasicProperties.Type);
+            }
 
             await _channel.BasicAckAsync(
                 deliveryTag:
@@ -496,7 +511,7 @@ public sealed class RabbitMqIntegrationEventConsumer
         }
 
         if (string.IsNullOrWhiteSpace(
-        _consumerSettings.RetryExchangeName))
+                _consumerSettings.RetryExchangeName))
         {
             throw new InvalidOperationException(
                 "RabbitMQ retry exchange name is not configured.");

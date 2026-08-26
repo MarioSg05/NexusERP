@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 
 using NexusERP.Application.Common.Interfaces;
 using NexusERP.Infrastructure.AI;
+using NexusERP.Infrastructure.Health;
 using NexusERP.Infrastructure.Identity.Jwt;
 using NexusERP.Infrastructure.Identity.Services;
 using NexusERP.Infrastructure.Messaging;
@@ -23,6 +24,8 @@ public static class DependencyInjection
 
         services.AddMessaging(
             configuration);
+
+        services.AddInfrastructureHealthChecks();
 
         services.Configure<JwtSettings>(
             configuration.GetSection(
