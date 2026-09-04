@@ -1,6 +1,6 @@
 # NexusERP - Current Project State
 
-Last updated: 2026-08-27
+Last updated: 2026-09-03
 
 ## Project Status
 
@@ -36,8 +36,8 @@ Out of scope until after v1.0:
 - Branch: `develop`
 - Remote branch: `origin/develop`
 - Working tree: clean
-- Last completed issue: `ID-035 - Add messaging health checks and observability`
-- Last merged pull request: `#74`
+- Last completed issue: `ID-036 - Harden RabbitMQ publishing reliability`
+- Last merged pull request: `#77`
 - Last completed milestone: `Sprint 12 - Microservices`
 - Build: passing
 - Automated tests: 166 passed
@@ -178,17 +178,19 @@ Transactional Inbox
        v
 Integration Event Handler
 
-Reliability
+### Reliability
 
 The messaging pipeline includes:
 
-Transactional Outbox
-Transactional Inbox
-Idempotent event consumption
-Retry handling
-Dead-letter handling
-Background processing through NexusERP.Worker
-Observability
+- Transactional Outbox
+- Transactional Inbox
+- Idempotent event consumption
+- RabbitMQ Publisher Confirms
+- Retry handling
+- Dead-letter handling
+- Background processing through `NexusERP.Worker`
+
+### Observability
 
 Current operational diagnostics include:
 
@@ -260,7 +262,35 @@ Axios
 
 The frontend consumes the NexusERP HTTP API.
 
-Known Documentation Debt
+## v1 Architecture Review
+
+The NexusERP v1 architecture review is complete.
+
+### Review Results
+
+- Project dependency direction: PASS
+- Domain module boundaries: PASS
+- Application boundaries: PASS
+- Persistence boundaries: PASS
+- Transactional Outbox persistence: PASS
+- Transactional Inbox identity and idempotency foundation: PASS
+- Messaging architecture: PASS after publisher reliability hardening
+- API and Worker composition boundaries: PASS
+
+### Accepted Architectural Trade-offs
+
+- The Application layer uses selected Entity Framework Core abstractions and query extensions while remaining independent from the concrete Infrastructure implementation.
+- NexusERP v1 uses a shared SQL Server database and a single `ApplicationDbContext` as part of its Modular Monolith architecture.
+- RabbitMQ messaging provides at-least-once delivery semantics combined with idempotent Inbox processing. NexusERP does not claim exactly-once delivery.
+
+### Remaining Architecture Findings
+
+- `NexusERP.Shared` currently contains no source code and should be evaluated for removal before v1.0.
+- RabbitMQ connection/channel reuse is a post-v1 optimization.
+- Outbox poison-message retry limits are a post-v1 reliability improvement.
+- The current RabbitMQ consumer handles a single Integration Event contract and may be generalized post-v1 if required.
+
+## Known Documentation Debt
 
 The following documentation requires synchronization before v1.0.0:
 
