@@ -1,74 +1,50 @@
 # NexusERP
 
-A modern Enterprise Resource Planning (ERP) system built with Domain-Driven Design (DDD), Clean Architecture and a Modular Monolith architecture using .NET 9.
+**Full-stack Enterprise Resource Planning platform built with .NET 9, React, Domain-Driven Design and reliable asynchronous messaging.**
 
-> Project status: Active development.
+NexusERP is a portfolio-focused ERP project designed to demonstrate the architecture and implementation of a modern business application beyond basic CRUD operations.
+
+**Current status:** NexusERP v1.0 release preparation.
 
 ---
 
-# Overview
+## Overview
 
-NexusERP is designed as a long-term ERP platform focused on maintainability, scalability and business-driven software design.
+NexusERP combines common ERP capabilities with enterprise application patterns including:
 
-The project follows Domain-Driven Design principles and emphasizes:
-
-- Rich Domain Model
+- Domain-Driven Design
 - Clean Architecture
-- Test-Driven Development (TDD)
 - Modular Monolith
-- Explicit Architecture Decision Records (ADR)
-
-The objective is to build an ERP that can evolve over time without sacrificing code quality.
-
----
-
-# Architecture
-
-The solution follows a layered architecture.
-
-```text
-Presentation (API)
-        |
-        v
-Application
-        |
-        v
-Domain
-        ^
-        |
-Infrastructure
-```
-
-Core architectural principles:
-
-- Domain-Driven Design (DDD)
-- Clean Architecture
 - Rich Domain Model
-- Dependency Inversion
-- CQRS-style Application Layer
-- In-process Domain Event dispatching
-- Transactional Outbox persistence
-- Integration Event mapping
-- Entity Framework Core
-- Minimal APIs
-- Reliable Outbox processing
-- Asynchronous messaging with RabbitMQ
+- CQRS-style application flows
+- JWT authentication and role-based authorization
+- Transactional Outbox and Inbox
+- RabbitMQ asynchronous messaging
+- Retry and dead-letter handling
+- Publisher Confirms
+- Automated integration testing with real infrastructure
+- Local AI-assisted business insights
+
+NexusERP v1 is intentionally a **Modular Monolith**, not a microservices architecture.
+
+Its integration boundaries allow future service extraction if concrete business or operational requirements justify it.
 
 ---
 
-# Technology Stack
+## Technology Stack
 
-## Backend
+### Backend
 
 - .NET 9
 - ASP.NET Core Minimal APIs
 - Entity Framework Core
 - SQL Server
-- JWT Authentication
 - FluentValidation
+- JWT Bearer Authentication
+- BCrypt
 - xUnit
 
-## Frontend
+### Frontend
 
 - React
 - TypeScript
@@ -78,439 +54,335 @@ Core architectural principles:
 - React Router
 - Axios
 
-## AI
+### Messaging and Infrastructure
 
-- Ollama
-- Gemma 3 1B
-- Local LLM inference
-- Provider-independent AI abstraction
-
-## Infrastructure
-
-- Docker
-- SQL Server container
-- Redis (planned)
 - RabbitMQ
 - .NET Worker Service
+- Transactional Outbox
+- Transactional Inbox
+- Publisher Confirms
+- Retry and Dead-Letter Queues
+- Docker
 - Testcontainers
+
+### AI
+
+- Ollama
+- Local language model integration
+- Provider-independent AI abstraction
 
 ---
 
-# Implemented Modules
+## Implemented Capabilities
 
-## Authentication and Authorization
+### Identity and Security
 
-- User registration
-- Login
+- User registration and authentication
 - JWT authentication
 - Role-based authorization
 - User management
+- Account activation and deactivation
 
-## Customers
+### Sales Master Data
 
 - Customer management
-
-## Products
-
 - Product management
-
-## Inventory
-
 - Inventory management
-- Stock adjustments
-
-## Suppliers
-
 - Supplier management
 
-## Purchasing
+### Business Operations
 
-- Purchase order management
+- Purchase Orders
+- Sales Orders
+- Inventory stock operations
 
-## Sales
+### Analytics
 
-- Sales order management
-
-## Reporting
-
-- Inventory report
-- Low-stock report
-- Sales report
-- Purchasing report
-
-## Dashboard
-
-- Inventory metrics
-- Sales metrics
-- Purchasing metrics
-
-## AI Business Insights
-
-- Deterministic ERP business analysis
-- Locally generated AI summaries
-- Ollama integration
-- Graceful degradation when the AI provider is unavailable
+- Inventory reports
+- Low-stock reporting
+- Sales reporting
+- Purchasing reporting
+- Business dashboard
+- AI-assisted business insights
 
 ---
 
-# AI Business Insights
+## Architecture
 
-NexusERP includes a local AI Business Insights feature designed to provide business-oriented summaries without making the language model the source of truth for ERP data.
+NexusERP follows a Clean Architecture dependency model:
 
-The feature uses a hybrid deterministic/LLM architecture:
+```text
+                   Domain
+                     ^
+                     |
+                 Application
+                     ^
+                     |
+                Infrastructure
+                  ^       ^
+                  |       |
+                 API    Worker
+```
+
+The backend is organized as a **Modular Monolith** with independent business modules inside the Domain and use-case-oriented slices in Application.
+
+The HTTP API and background Worker are separate hosts over the same application and infrastructure foundation.
+
+For the detailed architecture and trade-offs, see:
+
+[`docs/architecture/SYSTEM_ARCHITECTURE.md`](docs/architecture/SYSTEM_ARCHITECTURE.md)
+
+---
+
+## Reliable Messaging
+
+NexusERP includes a complete asynchronous messaging foundation:
+
+```text
+Domain Event
+     |
+     v
+Integration Event
+     |
+     v
+Transactional Outbox
+     |
+     v
+Outbox Worker
+     |
+     v
+RabbitMQ
+     |
+     v
+Transactional Inbox
+     |
+     v
+Integration Event Handler
+```
+
+Key reliability characteristics:
+
+- Business changes and Outbox messages are persisted atomically.
+- RabbitMQ Publisher Confirms protect publication before messages are considered processed.
+- Consumers use manual acknowledgements.
+- Retry attempts are bounded.
+- Permanent failures can be moved to a dead-letter queue.
+- Inbox persistence protects against duplicate message processing.
+- `MessageId` is preserved for correlation.
+
+Messaging semantics are:
+
+**at-least-once delivery with idempotent consumption**
+
+NexusERP does not claim exactly-once distributed delivery.
+
+---
+
+## AI Business Insights
+
+NexusERP integrates local AI through Ollama while keeping ERP calculations deterministic.
 
 ```text
 ERP Data
    |
    v
-BusinessInsightsAnalyzer
+Deterministic Analysis
    |
-   +------------------------+
-   |                        |
-   v                        v
-Verified Business Facts   AI-Safe Signals
-   |                        |
-   |                        v
-   |                IAiInsightsGenerator
-   |                        |
-   |                        v
-   |                      Ollama
-   |                        |
-   |                        v
-   |                   Gemma 3 1B
-   |                        |
-   v                        v
-Business Snapshot       AI Summary
-   |                        |
-   +-----------+------------+
-               |
-               v
-            Frontend
+   v
+Verified Business Facts
+   |
+   v
+AI Abstraction
+   |
+   v
+Ollama
+   |
+   v
+Optional Narrative Summary
 ```
 
-Critical ERP values such as sales totals, purchasing totals, inventory counts and pending order counts are calculated deterministically by NexusERP.
+The language model:
 
-The local language model does not act as the source of truth for those values. It receives only controlled qualitative signals and generates an optional short summary.
+- is not the source of truth for business data;
+- does not calculate authoritative ERP values;
+- has no direct database access;
+- does not receive database credentials.
 
-If Ollama is unavailable, the deterministic business snapshot remains available and the API returns the AI summary as `null`.
-
-## Local AI Setup
-
-NexusERP uses Ollama as the development AI provider.
-
-Install Ollama and download the configured model:
-
-```bash
-ollama pull gemma3:1b
-```
-
-Start Ollama:
-
-```bash
-ollama serve
-```
-
-The default NexusERP configuration expects:
-
-```text
-Base URL: http://localhost:11434
-Model: gemma3:1b
-```
-
-No paid AI API or external AI credentials are required.
-
-### Hardware Compatibility
-
-Ollama selects the available inference backend according to the host hardware.
-
-On systems where GPU acceleration is unavailable or incompatible, CPU inference can be used as a fallback. Hardware-specific Ollama configuration is an environment concern and is not coupled to the NexusERP application layers.
-
-### AI Limitations
-
-- AI summaries may contain inaccuracies.
-- AI output is not authoritative ERP data.
-- The model has no direct database access.
-- The model does not receive authentication credentials.
-- The model does not receive customer, supplier or user information in the current Business Insights implementation.
-- AI-generated actions cannot mutate ERP state.
-- Business Insights currently operates on aggregate inventory, sales and purchasing signals.
+The ERP remains functional when the AI provider is unavailable.
 
 ---
 
-# Project Structure
+## Project Structure
 
 ```text
-NexusERP
+NexusERP/
 |
-+-- backend
++-- backend/
 |   |
-|   +-- src
+|   +-- src/
 |   |   +-- NexusERP.Api
 |   |   +-- NexusERP.Application
 |   |   +-- NexusERP.Domain
 |   |   +-- NexusERP.Infrastructure
-|   |   +-- NexusERP.Shared
+|   |   +-- NexusERP.Worker
 |   |
-|   +-- tests
+|   +-- tests/
 |       +-- NexusERP.UnitTests
 |       +-- NexusERP.IntegrationTests
 |
-+-- frontend
-|
-+-- docker
-|
-+-- docs
-|   +-- adr
-|
-+-- scripts
++-- frontend/
++-- docker/
++-- docs/
 ```
 
 ---
 
-# Testing
+## Testing
 
-NexusERP uses separate unit and integration testing strategies.
+NexusERP uses both unit and integration testing.
 
-## Unit Tests
+Integration tests exercise real infrastructure through:
 
-Unit tests validate domain and application behavior in isolation.
+- ASP.NET Core `WebApplicationFactory`
+- SQL Server Testcontainers
+- RabbitMQ Testcontainers
+- Entity Framework Core migrations
+- Authentication and authorization
+- Messaging and persistence flows
 
-Current coverage includes:
-
-- Aggregates
-- Value Objects
-- Domain business rules
-- Application handlers
-- Deterministic AI analysis
-- AI provider fallback behavior
-
-Unit tests use xUnit and follow the Arrange / Act / Assert pattern.
-
-AI unit tests do not require Ollama to be running. The AI provider is abstracted through `IAiInsightsGenerator`, allowing the Application layer to be tested deterministically.
-
-## Integration Tests
-
-Backend integration tests exercise NexusERP through the real application stack:
+Current v1 baseline:
 
 ```text
-xUnit
-  |
-  v
-WebApplicationFactory
-  |
-  v
-NexusERP.Api
-  |
-  v
-Authentication / Authorization
-  |
-  v
-Application
-  |
-  v
-Infrastructure
-  |
-  v
-Entity Framework Core
-  |
-  v
-SQL Server Testcontainer
+Total:   166
+Passed:  166
+Failed:  0
+Skipped: 0
 ```
 
-Integration tests use:
+Examples of integration coverage include:
 
-- xUnit
-- `Microsoft.AspNetCore.Mvc.Testing`
-- `WebApplicationFactory`
-- Testcontainers for .NET
-- Real SQL Server
-- Real Entity Framework Core migrations
-
-The integration test suite currently covers:
-
-- API startup
-- Protected endpoint behavior
-- Valid and invalid authentication
-- Inactive user authentication
-- JWT authentication through the real HTTP pipeline
-- Role-based authorization
-- Customer write/read persistence
-- Successful sales order confirmation
-- Inventory reduction after sales confirmation
-- Insufficient-stock consistency
-- Multi-item sales confirmation without partial inventory changes
-
-## Integration Test Isolation
-
-Integration tests run against a disposable SQL Server container.
-
-They do not use the normal NexusERP development database or development database credentials.
-
-The test infrastructure:
-
-1. Starts a SQL Server container.
-2. Starts NexusERP through `WebApplicationFactory`.
-3. Overrides the database and JWT configuration with test-only values.
-4. Applies the real Entity Framework Core migrations.
-5. Executes the integration test suite.
-6. Disposes the API test host and SQL Server container.
-
-Test data uses isolated identifiers and does not depend on execution order.
-
-## Running Tests
-
-Run the complete backend test suite:
-
-```bash
-cd backend
-dotnet test
-```
-
-Run only unit tests:
-
-```bash
-dotnet test tests/NexusERP.UnitTests
-```
-
-Run only integration tests:
-
-```bash
-dotnet test tests/NexusERP.IntegrationTests
-```
-
-### Integration Test Requirement
-
-Docker must be running when executing `NexusERP.IntegrationTests`.
-
-Testcontainers automatically manages the temporary SQL Server instance, so no manually configured integration-test database is required.
-
-Docker is not required to run the unit test suite.
-
-## Current Test Status
-
-- 109 unit tests
-- 17 integration tests
-- 126 total automated backend tests
-- 0 failing tests
-
-# Documentation
-
-Project documentation is available under:
-
-```text
-docs/
-```
-
-Including:
-
-- Architecture
-- ADRs
-- Domain documentation
-- Roadmap
-- Development guide
-
----
-
-# Development Workflow
-
-Each feature follows the same engineering workflow.
-
-```text
-Architecture Workshop
-        |
-        v
-Domain
-        |
-        v
-Unit Tests
-        |
-        v
-Application
-        |
-        v
-Infrastructure
-        |
-        v
-Migration (when required)
-        |
-        v
-API
-        |
-        v
-Swagger / API Verification
-        |
-        v
-Manual Tests
-        |
-        v
-Git Review
-        |
-        v
-Pull Request
-        |
-        v
-Merge
-```
-
-Features that do not require persistence changes do not introduce database migrations.
+- Authentication and authorization
+- Sales and Inventory transactions
+- Transactional Outbox persistence
+- RabbitMQ publishing and consumption
+- Transactional Inbox processing
+- Retry and dead-letter behavior
+- Infrastructure health checks
 
 ---
 
 ## Health Checks
 
-NexusERP exposes separate liveness and readiness endpoints:
+The API exposes:
 
-- `GET /health/live` verifies that the API process is running.
-- `GET /health/ready` verifies SQL Server and RabbitMQ connectivity.
+```text
+GET /health/live
+GET /health/ready
+```
 
-The readiness endpoint returns `503 Service Unavailable` when a required dependency is unavailable.
+Readiness includes SQL Server and RabbitMQ connectivity.
 
-# Roadmap
+---
 
-## Completed
+## Local Development
 
-- Authentication and authorization
-- Customers
-- Products
-- Inventory
-- Suppliers
-- Purchasing
-- Sales
-- Reporting
-- Dashboard
-- Frontend Phase 1
-- AI Business Insights foundation
-- Backend integration testing foundation
-- In-process Domain Event dispatching
-- Transactional Outbox persistence
-- Integration Event mapping to the Outbox
-- Outbox processor foundation
-- RabbitMQ Outbox Worker
-- RabbitMQ Integration Event consumer
-- Transactional Inbox and idempotent event consumption
-- RabbitMQ retry and dead-letter handling
-- Messaging health checks and observability
+Main requirements:
 
-## Planned
+- .NET 9 SDK
+- Docker Desktop
+- Node.js and npm
+- Git
 
-- Microservices evolution
-- Warehouse
+Optional:
+
+- Ollama for AI-generated summaries
+
+The local environment uses Docker for SQL Server and RabbitMQ and .NET User Secrets for sensitive API and Worker configuration.
+
+For complete setup and execution instructions, see:
+
+[`docs/onboarding/DEVELOPMENT_GUIDE.md`](docs/onboarding/DEVELOPMENT_GUIDE.md)
+
+---
+
+## Documentation
+
+Additional project documentation:
+
+- [System Architecture](docs/architecture/SYSTEM_ARCHITECTURE.md)
+- [Development Guide](docs/onboarding/DEVELOPMENT_GUIDE.md)
+- [Current Project State](docs/project/CURRENT_STATE.md)
+- [Roadmap](docs/roadmap/ROADMAP.md)
+- [Architecture Decision Records](docs/adr/)
+
+---
+
+## Roadmap
+
+The functional scope for NexusERP v1 is complete.
+
+Current work focuses on:
+
+- release stabilization;
+- security and configuration review;
+- quality verification;
+- frontend polish;
+- documentation;
+- portfolio presentation.
+
+Potential post-v1 work includes:
+
+- Warehouse Management
 - Accounting
 - Notifications
+- Microservices evolution
+- Additional production observability
+
+See the complete [Roadmap](docs/roadmap/ROADMAP.md).
 
 ---
 
-# Contributing
+## Development Workflow
 
-Please read:
+Development follows:
 
-- `CONTRIBUTING.md`
-- `CODE_OF_CONDUCT.md`
+```text
+feature/* -> develop -> main
+```
 
-before contributing to the project.
+Changes are reviewed through Pull Requests and use Conventional Commit-style messages.
+
+See the [Development Guide](docs/onboarding/DEVELOPMENT_GUIDE.md) and [Contributing Guide](CONTRIBUTING.md).
 
 ---
 
-# License
+## Project Goals
 
-This project is licensed under the MIT License.
+NexusERP was built to demonstrate practical experience with:
+
+- business-oriented domain modeling;
+- backend and frontend integration;
+- authentication and authorization;
+- relational persistence;
+- automated testing;
+- asynchronous messaging;
+- reliability patterns;
+- failure handling;
+- local AI integration;
+- architecture evolution and technical trade-offs.
+
+The project favors justified engineering decisions over adding technologies solely for complexity.
+
+---
+
+## Contributing
+
+Contribution guidelines are available in:
+
+[CONTRIBUTING.md](CONTRIBUTING.md)
+
+---
+
+## License
+
+See [LICENSE](LICENSE).
