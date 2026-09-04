@@ -36,7 +36,7 @@ Out of scope until after v1.0:
 - Branch: `develop`
 - Remote branch: `origin/develop`
 - Working tree: clean
-- Last completed issue: `ID-036 - Harden RabbitMQ publishing reliability`
+- Last completed issue: `ID-037 - Remove unused NexusERP.Shared project`
 - Last merged pull request: `#77`
 - Last completed milestone: `Sprint 12 - Microservices`
 - Build: passing
@@ -284,22 +284,18 @@ The NexusERP v1 architecture review is complete.
 
 ### Remaining Architecture Findings
 
-- `NexusERP.Shared` currently contains no source code and should be evaluated for removal before v1.0.
 - RabbitMQ connection/channel reuse is a post-v1 optimization.
 - Outbox poison-message retry limits are a post-v1 reliability improvement.
 - The current RabbitMQ consumer handles a single Integration Event contract and may be generalized post-v1 if required.
 
 ## Known Documentation Debt
 
-The following documentation requires synchronization before v1.0.0:
+Core v1 documentation has been synchronized during ID-038.
 
-SYSTEM_ARCHITECTURE.md predates the current messaging architecture.
-ROADMAP.md represents the original roadmap and is obsolete.
-DEVELOPMENT_GUIDE.md does not yet describe the complete development environment.
-README.md contains outdated automated test counts.
-README.md project structure does not yet include NexusERP.Worker.
-ADR coverage predates the distributed messaging architecture.
-Known Review Items
+Remaining documentation work:
+
+- ADR coverage predates the distributed messaging architecture.
+- Portfolio screenshots and final presentation material are pending.
 
 The v1 release review must verify:
 

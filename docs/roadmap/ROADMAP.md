@@ -1,50 +1,80 @@
 # NexusERP Roadmap
 
-## Sprint 0
+NexusERP has completed its planned v1 functional scope and is currently
+in **v1.0 release preparation**.
 
-- Arquitectura
-- Configuración
-- Docker
-- Documentación
-- Git
-- Calidad
+The project is under Feature Freeze. No new business modules will be added
+before the v1.0.0 release.
 
-## Sprint 1
+## Completed for v1
 
-Identity
+### Platform
 
-## Sprint 2
+- Clean Architecture and Domain-Driven Design foundation
+- Modular Monolith
+- SQL Server persistence with Entity Framework Core
+- Docker development environment
+- Authentication and role-based authorization
+- Unit and integration testing
+- Health checks and structured diagnostics
 
-Customers
+### ERP Capabilities
 
-## Sprint 3
+- Identity and User Management
+- Customers
+- Products
+- Inventory
+- Suppliers
+- Purchasing
+- Sales
+- Reports
+- Dashboard
+- AI Business Insights
 
-Products
+### Frontend
 
-## Sprint 4
+- React and TypeScript application
+- Authentication flow
+- ERP navigation
+- Dashboard and business module interfaces
+- Server-state integration with TanStack Query
 
-Inventory
+### Messaging
 
-## Sprint 5
+- Domain Events
+- Integration Events
+- Transactional Outbox
+- Background Worker
+- RabbitMQ publishing and consumption
+- Transactional Inbox
+- Retry and dead-letter handling
+- Publisher Confirms
+- Messaging health checks and diagnostics
 
-Sales
+## Current Phase — NexusERP v1.0
 
-## Sprint 6
+Current work is limited to release preparation:
 
-Purchasing
+- Architecture stabilization
+- Documentation synchronization
+- Security and configuration review
+- Code and test quality review
+- Frontend release polish
+- Portfolio presentation
+- Release candidate validation
 
-## Sprint 7
+No new business functionality is planned during this phase.
 
-Reports
+## Post-v1
 
-## Sprint 8
+Potential future work includes:
 
-Dashboard
+- Warehouse Management
+- Accounting
+- Notifications
+- Microservices evolution
+- Additional observability and distributed tracing
+- Production deployment improvements
 
-## Sprint 9
-
-Artificial Intelligence
-
-## Sprint 10
-
-Microservices
+Post-v1 work will be prioritized only after the v1.0.0 release and should
+be driven by concrete product or operational requirements.
