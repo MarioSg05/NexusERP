@@ -20,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\NexusERP.Application\NexusERP.Application.csproj" />
     <ProjectReference Include="..\NexusERP.Infrastructure\NexusERP.Infrastructure.csproj" />
-    <ProjectReference Include="..\NexusERP.Shared\NexusERP.Shared.csproj" />
   </ItemGroup>
 
 </Project>

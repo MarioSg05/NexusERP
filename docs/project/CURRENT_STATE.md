@@ -78,7 +78,6 @@ The backend solution currently contains:
 - `NexusERP.Application`
 - `NexusERP.Domain`
 - `NexusERP.Infrastructure`
-- `NexusERP.Shared`
 - `NexusERP.Worker`
 - `NexusERP.UnitTests`
 - `NexusERP.IntegrationTests`
