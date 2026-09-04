@@ -90,7 +90,7 @@ All read operations are encapsulated inside ReportQueries.
 
 ## Query Execution Levels
 
-### Level 1 — EF Core Projection (Default)
+### Level 1 - EF Core Projection (Default)
 
 Use Entity Framework Core with:
 
@@ -109,7 +109,7 @@ Suitable for:
 
 ---
 
-### Level 2 — Parameterized SQL
+### Level 2 - Parameterized SQL
 
 When Entity Framework Core cannot translate a LINQ expression because of ORM limitations (for example ValueConverters), use parameterized SQL through EF Core.
 
@@ -128,7 +128,7 @@ SQL injection must always be prevented through parameterization.
 
 ---
 
-### Level 3 — SQL Views
+### Level 3 - SQL Views
 
 SQL Views are reserved for:
 
@@ -152,7 +152,7 @@ Specifically:
 - ValueConverters remain the persistence strategy.
 - ORM limitations must never dictate Domain design.
 
-If a report cannot be efficiently expressed through LINQ because of ValueConverter translation limitations, the reporting strategy changes—not the Domain Model.
+If a report cannot be efficiently expressed through LINQ because of ValueConverter translation limitations, the reporting strategy changes - not the Domain Model.
 
 ---
 
