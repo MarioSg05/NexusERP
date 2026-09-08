@@ -18,14 +18,14 @@ public sealed class InventoryItemConfiguration
         builder.Property(x => x.ProductId)
             .IsRequired();
 
-        builder.HasIndex(x => x.ProductId)
-            .IsUnique();
-
         builder.Property(x => x.Quantity)
             .HasConversion<InventoryQuantityConverter>()
             .IsRequired();
 
         builder.Property(x => x.IsActive)
             .IsRequired();
+
+        builder.HasIndex(x => x.ProductId)
+          .IsUnique();
     }
 }

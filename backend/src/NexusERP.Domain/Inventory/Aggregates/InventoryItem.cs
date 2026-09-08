@@ -45,6 +45,11 @@ public sealed class InventoryItem : AggregateRoot
         Quantity = new InventoryQuantity(
             Quantity.Value + quantity.Value);
 
+        AddDomainEvent(
+            new StockIncreasedEvent(
+                Id,
+                quantity.Value));
+
         UpdateAudit();
     }
 
@@ -61,12 +66,22 @@ public sealed class InventoryItem : AggregateRoot
         Quantity = new InventoryQuantity(
             Quantity.Value - quantity.Value);
 
+        AddDomainEvent(
+            new StockDecreasedEvent(
+                Id,
+                quantity.Value));
+
         UpdateAudit();
     }
 
     public void AdjustStock(InventoryQuantity quantity)
     {
         Quantity = quantity;
+
+        AddDomainEvent(
+            new InventoryAdjustedEvent(
+                Id,
+                quantity.Value));
 
         UpdateAudit();
     }

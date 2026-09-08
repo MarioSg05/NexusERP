@@ -9,18 +9,28 @@ public sealed record Email
 
     public Email(string value)
     {
+        // Validate
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("Email cannot be empty.");
+        {
+            throw new DomainException(
+                "Email cannot be empty.");
+        }
 
-        if (!Regex.IsMatch(value,
-            @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            throw new DomainException("Invalid email.");
+        // Normalize
+        var normalizedValue =
+            value.Trim().ToLowerInvariant();
 
-        Value = value;
+        // Business Rules
+        if (!Regex.IsMatch(
+                normalizedValue,
+                @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        {
+            throw new DomainException(
+                "Invalid email.");
+        }
+
+        Value = normalizedValue;
     }
 
-    public override string ToString()
-    {
-        return Value;
-    }
+    public override string ToString() => Value;
 }

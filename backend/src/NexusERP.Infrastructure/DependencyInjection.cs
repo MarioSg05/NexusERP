@@ -1,11 +1,15 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NexusERP.Application.Common.Interfaces;
-using NexusERP.Infrastructure.Persistence;
-using NexusERP.Infrastructure.Identity.Services;
 using Microsoft.Extensions.Options;
+
+using NexusERP.Application.Common.Interfaces;
+using NexusERP.Infrastructure.AI;
+using NexusERP.Infrastructure.Health;
 using NexusERP.Infrastructure.Identity.Jwt;
+using NexusERP.Infrastructure.Identity.Services;
+using NexusERP.Infrastructure.Messaging;
+using NexusERP.Infrastructure.Persistence;
+using NexusERP.Infrastructure.Persistence.Queries;
 
 namespace NexusERP.Infrastructure;
 
@@ -15,21 +19,99 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            options.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"));
-        });
+        services.AddPersistence(
+            configuration);
 
-        services.Configure<JwtSettings>(
-          configuration.GetSection(JwtSettings.SectionName));
+        services.AddMessaging(
+            configuration);
 
-        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddInfrastructureHealthChecks();
 
-        services.AddScoped<IApplicationDbContext>(
-            provider => provider.GetRequiredService<ApplicationDbContext>());
+        services
+            .AddOptions<JwtSettings>()
+            .Bind(
+                configuration.GetSection(
+                    JwtSettings.SectionName))
+            .Validate(
+                settings =>
+                    !string.IsNullOrWhiteSpace(
+                        settings.Key),
+                "JWT signing key is required.")
+            .Validate(
+                settings =>
+                    !string.IsNullOrWhiteSpace(
+                        settings.Issuer),
+                "JWT issuer is required.")
+            .Validate(
+                settings =>
+                    !string.IsNullOrWhiteSpace(
+                        settings.Audience),
+                "JWT audience is required.")
+            .Validate(
+                settings =>
+                    settings.ExpirationMinutes > 0,
+                "JWT expiration must be greater than zero.")
+            .ValidateOnStart();
 
-        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.Configure<OllamaSettings>(
+            configuration.GetSection(
+                OllamaSettings.SectionName));
+
+        services.AddScoped<
+            IJwtTokenGenerator,
+            JwtTokenGenerator>();
+
+        services.AddHttpClient<
+            IAiInsightsGenerator,
+            OllamaBusinessInsightsGenerator>(
+                (serviceProvider, client) =>
+                {
+                    var settings =
+                        serviceProvider
+                            .GetRequiredService<
+                                IOptions<OllamaSettings>>()
+                            .Value;
+
+                    client.Timeout =
+                        TimeSpan.FromSeconds(
+                            settings.TimeoutSeconds);
+                });
+
+        services.AddScoped<
+            IReportQueries,
+            ReportQueries>();
+
+        services.AddScoped<
+            IDashboardQueries,
+            DashboardQueries>();
+
+        services.AddScoped<
+            IPasswordHasher,
+            PasswordHasher>();
+
+        services.AddScoped<
+            ICustomerQueries,
+            CustomerQueries>();
+
+        services.AddScoped<
+            IProductQueries,
+            ProductQueries>();
+
+        services.AddScoped<
+            IInventoryQueries,
+            InventoryQueries>();
+
+        services.AddScoped<
+            ISupplierQueries,
+            SupplierQueries>();
+
+        services.AddScoped<
+            IPurchasingQueries,
+            PurchasingQueries>();
+
+        services.AddScoped<
+            ISalesQueries,
+            SalesQueries>();
 
         return services;
     }

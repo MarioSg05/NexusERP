@@ -1,4 +1,5 @@
 using NexusERP.Application.Suppliers.RegisterSupplier;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Suppliers;
 
@@ -23,7 +24,8 @@ public static class RegisterSupplierEndpoint
                     $"/api/suppliers/{response.Id}",
                     response);
             })
-
+.RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
         .WithName("RegisterSupplier")
         .WithSummary("Registers a new supplier.")
         .WithDescription("Creates a new supplier in the system.")

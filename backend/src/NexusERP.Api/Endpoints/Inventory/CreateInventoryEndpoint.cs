@@ -1,4 +1,5 @@
 using NexusERP.Application.Inventory.CreateInventory;
+using NexusERP.Api.Authorization;
 
 namespace NexusERP.Api.Endpoints.Inventory;
 
@@ -22,7 +23,8 @@ public static class CreateInventoryEndpoint
                     $"/api/inventory/{response.Id}",
                     response);
             })
-
+.RequireAuthorization(
+    AuthorizationPolicies.ManageErp)
         .WithName("CreateInventory")
         .WithSummary("Creates a new inventory record.")
         .WithDescription("Creates an inventory record for an existing product.")

@@ -12,14 +12,11 @@ public abstract class BaseEntity
 
     public string? UpdatedBy { get; protected set; }
 
-    public bool IsDeleted { get; protected set; }
-
     protected BaseEntity()
     {
         Id = Guid.NewGuid();
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
-        IsDeleted = false;
     }
 
     protected void SetCreatedBy(string user)
@@ -31,11 +28,5 @@ public abstract class BaseEntity
     {
         UpdatedAt = DateTime.UtcNow;
         UpdatedBy = updatedBy;
-    }
-
-    protected void SoftDelete()
-    {
-        IsDeleted = true;
-        UpdatedAt = DateTime.UtcNow;
     }
 }

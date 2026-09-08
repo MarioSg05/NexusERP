@@ -84,4 +84,10 @@ public sealed class Customer : AggregateRoot
         IsActive = false;
         UpdateAudit();
     }
+
+    public void ChangeType(CustomerType type)
+    {
+        Type = type;
+        UpdateAudit();
+    }
 }

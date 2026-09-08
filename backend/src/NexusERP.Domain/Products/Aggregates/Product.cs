@@ -71,4 +71,14 @@ public sealed class Product : AggregateRoot
 
         UpdateAudit();
     }
+
+    public void ChangeName(ProductName name)
+    {
+        if (Name == name)
+            return;
+
+        Name = name;
+
+        UpdateAudit();
+    }
 }

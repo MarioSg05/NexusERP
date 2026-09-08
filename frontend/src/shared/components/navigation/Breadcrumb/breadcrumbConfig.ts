@@ -1,0 +1,222 @@
+import type { BreadcrumbItem } from "./types";
+
+const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
+    "/": [
+        {
+            label: "Dashboard",
+        },
+    ],
+
+    "/customers": [
+        {
+            label: "Customers",
+        },
+    ],
+    "/customers/new": [
+        {
+            label: "Customers",
+            href: "/customers",
+        },
+        {
+            label: "New Customer",
+        },
+    ],
+    "/products": [
+        {
+            label: "Products",
+        },
+    ],
+    "/products/new": [
+        {
+            label: "Products",
+            href: "/products",
+        },
+        {
+            label: "New Product",
+        },
+    ],
+    "/inventory": [
+        {
+            label: "Inventory",
+        },
+    ],
+    "/inventory/new": [
+        {
+            label: "Inventory",
+            href: "/inventory",
+        },
+        {
+            label: "Create Inventory",
+        },
+    ],
+    "/purchasing": [
+        {
+            label: "Purchasing",
+        },
+    ],
+    "/purchasing/new": [
+        {
+            label: "Purchasing",
+            href: "/purchasing",
+        },
+        {
+            label: "New Purchase Order",
+        },
+    ],
+    "/sales": [
+        {
+            label: "Sales",
+        },
+    ],
+    "/sales/new": [
+        {
+            label: "Sales",
+            href: "/sales",
+        },
+        {
+            label: "New Sales Order",
+        },
+    ],
+    "/reports/inventory": [
+        {
+            label: "Reports",
+        },
+        {
+            label: "Inventory",
+        },
+    ],
+    "/reports/low-stock": [
+        {
+            label: "Reports",
+        },
+        {
+            label: "Low Stock",
+        },
+    ],
+    "/reports/sales": [
+        {
+            label: "Reports",
+        },
+        {
+            label: "Sales",
+        },
+    ],
+    "/reports/purchasing": [
+        {
+            label: "Reports",
+        },
+        {
+            label: "Purchasing",
+        },
+    ],
+    "/ai/business-insights": [
+        {
+            label: "AI Insights",
+        },
+    ],
+
+    "/users": [
+        {
+            label: "Users",
+        },
+    ],
+    "/users/new": [
+        {
+            label: "Users",
+            href: "/users",
+        },
+        {
+            label: "New User",
+        },
+    ],
+    "/suppliers": [
+        {
+            label: "Suppliers",
+        },
+    ],
+    "/suppliers/new": [
+        {
+            label: "Suppliers",
+            href: "/suppliers",
+        },
+        {
+            label: "New Supplier",
+        },
+    ],
+};
+
+export function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {
+    if (pathname.startsWith("/customers/") && pathname.endsWith("/edit")) {
+        return [
+            {
+                label: "Customers",
+                href: "/customers",
+            },
+            {
+                label: "Edit Customer",
+            },
+        ];
+    }
+
+    if (pathname.startsWith("/products/") && pathname.endsWith("/edit")) {
+        return [
+            {
+                label: "Products",
+                href: "/products",
+            },
+            {
+                label: "Edit Product",
+            },
+        ];
+    }
+
+    if (pathname.startsWith("/users/") && pathname.endsWith("/edit")) {
+        return [
+            {
+                label: "Users",
+                href: "/users",
+            },
+            {
+                label: "Edit User",
+            },
+        ];
+    }
+
+    if (pathname.startsWith("/purchasing/") && pathname !== "/purchasing/new") {
+        return [
+            {
+                label: "Purchasing",
+                href: "/purchasing",
+            },
+            {
+                label: "Purchase Order",
+            },
+        ];
+    }
+
+    if (pathname.startsWith("/sales/") && pathname !== "/sales/new") {
+        return [
+            {
+                label: "Sales",
+                href: "/sales",
+            },
+            {
+                label: "Sales Order",
+            },
+        ];
+    }
+
+    if (pathname.startsWith("/suppliers/") && pathname.endsWith("/edit")) {
+        return [
+            {
+                label: "Suppliers",
+                href: "/suppliers",
+            },
+            {
+                label: "Edit Supplier",
+            },
+        ];
+    }
+
+    return breadcrumbMap[pathname] ?? [];
+}

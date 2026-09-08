@@ -3,7 +3,6 @@
   <ItemGroup>
     <ProjectReference Include="..\NexusERP.Application\NexusERP.Application.csproj" />
     <ProjectReference Include="..\NexusERP.Domain\NexusERP.Domain.csproj" />
-    <ProjectReference Include="..\NexusERP.Shared\NexusERP.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -12,6 +11,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.2" />
+    <PackageReference Include="RabbitMQ.Client" Version="7.2.2" />
   </ItemGroup>
 
   <PropertyGroup>

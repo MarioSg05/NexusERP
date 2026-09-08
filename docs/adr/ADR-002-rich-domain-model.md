@@ -1,20 +1,39 @@
-# ADR-002: Rich Domain Model
+# ADR-002 - Rich Domain Model
 
-## Estado
+## Status
 
-Aceptado
+Accepted
 
-## Contexto
+---
 
-El proyecto requiere un dominio que encapsule reglas de negocio y evite modelos anémicos donde la lógica se concentra en servicios.
+## Context
 
-## Decisión
+NexusERP models business processes that contain complex business rules and invariants.
 
-Las entidades del dominio serán modelos ricos (Rich Domain Model). Las reglas de negocio vivirán dentro de las entidades mediante métodos de dominio.
+An anemic domain model would move business logic into services, making the domain difficult to maintain and reason about as the system grows.
 
-## Consecuencias
+---
 
-- Las entidades tendrán comportamiento además de datos.
-- Se evitarán setters públicos.
-- El dominio protegerá sus invariantes.
-- Los cambios de estado siempre pasarán por métodos del Aggregate Root.
+## Decision
+
+The project adopts a Rich Domain Model.
+
+Business rules must live inside Aggregates, Entities and Value Objects.
+
+The Domain layer is responsible for protecting its own invariants.
+
+---
+
+## Consequences
+
+Benefits
+
+- Business rules remain close to the data they govern.
+- Domain invariants are protected.
+- Application services remain thin and focused on orchestration.
+- The domain model becomes easier to understand and evolve.
+
+Tradeoffs
+
+- Domain objects contain more behavior than traditional CRUD models.
+- Developers must understand Domain-Driven Design concepts before contributing.

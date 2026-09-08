@@ -25,9 +25,6 @@ public sealed class ProductConfiguration
             .HasMaxLength(ProductSku.MaxLength)
             .IsRequired();
 
-        builder.HasIndex(x => x.Sku)
-            .IsUnique();
-
         builder.Property(x => x.Price)
             .HasConversion<ProductPriceConverter>()
             .HasColumnType("decimal(18,2)")
@@ -35,5 +32,8 @@ public sealed class ProductConfiguration
 
         builder.Property(x => x.IsActive)
             .IsRequired();
+
+        builder.HasIndex(x => x.Sku)
+            .IsUnique();
     }
 }

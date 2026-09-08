@@ -21,11 +21,15 @@ public static class LoginUserEndpoint
 
                 return Results.Ok(response);
             })
+        .AllowAnonymous()
         .WithName("LoginUser")
         .WithSummary("Authenticates a user.")
-        .WithDescription("Authenticates a registered user and returns a JWT.")
-        .Produces<LoginUserResponse>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status401Unauthorized);
+        .WithDescription(
+            "Authenticates a registered user and returns a JWT.")
+        .Produces<LoginUserResponse>(
+            StatusCodes.Status200OK)
+        .Produces(
+            StatusCodes.Status401Unauthorized);
 
         return app;
     }

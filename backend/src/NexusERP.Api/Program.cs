@@ -1,31 +1,66 @@
+using System.Text;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+
+using NexusERP.Application;
+using NexusERP.Infrastructure;
+
+using NexusERP.Api.Authorization;
+using NexusERP.Api.Extensions;
+using NexusERP.Api.Endpoints.Purchasing;
 using NexusERP.Api.Endpoints.Identity;
 using NexusERP.Api.Endpoints.Customers;
-using NexusERP.Application.Customers.RegisterCustomer;
-using NexusERP.Api.Endpoints.Products;
-using NexusERP.Application.Products.RegisterProduct;
-using NexusERP.Application.Inventory.CreateInventory;
 using NexusERP.Api.Endpoints.Inventory;
 using NexusERP.Api.Endpoints.Suppliers;
-using NexusERP.Application.Suppliers.RegisterSupplier;
-using NexusERP.Application.Identity.RegisterUser;
-using NexusERP.Infrastructure;
-using NexusERP.Application.Identity.LoginUser;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using NexusERP.Api.Extensions;
-using System.Text;
+using NexusERP.Api.Endpoints.Products;
+using NexusERP.Api.Endpoints.Sales;
+using NexusERP.Api.Endpoints.Reports;
+using NexusERP.Api.Endpoints.Dashboard;
+using NexusERP.Api.Endpoints.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition(
+        "bearer",
+        new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            Description =
+                "JWT Authorization header using the Bearer scheme."
+        });
+
+    options.AddSecurityRequirement(
+        document =>
+            new OpenApiSecurityRequirement
+            {
+                [
+                    new OpenApiSecuritySchemeReference(
+                        "bearer",
+                        document)
+                ] = []
+            });
+});
+
+// Authentication
 builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddAuthentication(
+        JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var jwtSection = builder.Configuration.GetSection("Jwt");
+        var jwtSection =
+            builder.Configuration
+                .GetSection("Jwt");
 
         options.TokenValidationParameters =
             new TokenValidationParameters
@@ -35,9 +70,11 @@ builder.Services
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
 
-                ValidIssuer = jwtSection["Issuer"],
+                ValidIssuer =
+                    jwtSection["Issuer"],
 
-                ValidAudience = jwtSection["Audience"],
+                ValidAudience =
+                    jwtSection["Audience"],
 
                 IssuerSigningKey =
                     new SymmetricSecurityKey(
@@ -46,33 +83,75 @@ builder.Services
             };
     });
 
-builder.Services.AddAuthorization();
+// Authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy =
+        new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .Build();
+
+    options.AddPolicy(
+        AuthorizationPolicies.ManageErp,
+        policy =>
+        {
+            policy.RequireRole(
+                "Administrator",
+                "Manager");
+        });
+
+    options.AddPolicy(
+        AuthorizationPolicies.ManageUsers,
+        policy =>
+        {
+            policy.RequireRole(
+                "Administrator");
+        });
+});
 
 // Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
 
 // Application
-builder.Services.AddScoped<RegisterSupplierHandler>();
+builder.Services.AddApplication();
 
-builder.Services.AddScoped<RegisterSupplierValidator>();
-
-builder.Services.AddScoped<RegisterCustomerValidator>();
-
-builder.Services.AddScoped<RegisterProductValidator>();
-
-builder.Services.AddScoped<CreateInventoryValidator>();
-
-builder.Services.AddScoped<CreateInventoryHandler>();
-
-builder.Services.AddScoped<RegisterProductHandler>();
-
-builder.Services.AddScoped<RegisterCustomerHandler>();
-
-builder.Services.AddScoped<RegisterUserHandler>();
-
-builder.Services.AddScoped<LoginUserHandler>();
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "Frontend",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
+
+// Health
+app.MapHealthChecks(
+        "/health/live",
+        new HealthCheckOptions
+        {
+            Predicate =
+                _ => false
+        })
+    .AllowAnonymous();
+
+app.MapHealthChecks(
+        "/health/ready",
+        new HealthCheckOptions
+        {
+            Predicate =
+                registration =>
+                    registration.Tags
+                        .Contains(
+                            "ready")
+        })
+    .AllowAnonymous();
 
 if (app.Environment.IsDevelopment())
 {
@@ -80,26 +159,80 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Identity
+app.MapRegisterUser();
+app.MapLoginUser();
+app.MapMeEndpoint();
+app.MapGetUsers();
+app.MapGetUserById();
+app.MapUpdateUser();
+app.MapChangeUserRole();
+app.MapActivateUser();
+app.MapDeactivateUser();
+
 app.UseGlobalExceptionHandling();
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsEnvironment(
+        "IntegrationTesting"))
+{
+    app.UseHttpsRedirection();
+}
+
+app.UseCors("Frontend");
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapRegisterUser();
-
-app.MapLoginUser();
-
-app.MapMeEndpoint();
-
+// Sales Master Data
 app.MapRegisterCustomer();
+app.MapGetCustomers();
+app.MapGetCustomerById();
+app.MapUpdateCustomer();
 
 app.MapRegisterProduct();
+app.MapGetProducts();
+app.MapGetProductById();
+app.MapUpdateProduct();
 
 app.MapCreateInventory();
+app.MapGetInventory();
+app.MapIncreaseInventoryStock();
+app.MapDecreaseInventoryStock();
+app.MapAdjustInventoryStock();
 
 app.MapRegisterSupplier();
+app.MapGetSuppliers();
+app.MapGetSupplierById();
+app.MapUpdateSupplier();
+app.MapActivateSupplier();
+app.MapDeactivateSupplier();
+
+app.MapCreateSalesOrder();
+app.MapGetSalesOrders();
+app.MapGetSalesOrderById();
+app.MapConfirmSalesOrder();
+app.MapCancelSalesOrder();
+
+// Purchasing
+app.MapCreatePurchaseOrder();
+app.MapGetPurchaseOrders();
+app.MapGetPurchaseOrderById();
+app.MapApprovePurchaseOrder();
+app.MapCancelPurchaseOrder();
+
+// Reports
+app.MapGetInventoryReport();
+app.MapGetLowStockReport();
+app.MapGetSalesReport();
+app.MapGetPurchasingReport();
+
+// Dashboard
+app.MapGetDashboard();
+
+// AI
+app.MapGetBusinessInsights();
 
 app.Run();
+
+public partial class Program;
