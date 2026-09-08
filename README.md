@@ -253,8 +253,8 @@ Integration tests exercise real infrastructure through:
 Current v1 baseline:
 
 ```text
-Total:   166
-Passed:  166
+Total:   171
+Passed:  171
 Failed:  0
 Skipped: 0
 ```
@@ -323,12 +323,9 @@ The functional scope for NexusERP v1 is complete.
 
 Current work focuses on:
 
-- release stabilization;
-- security and configuration review;
-- quality verification;
-- frontend polish;
-- documentation;
-- portfolio presentation.
+- final documentation synchronization;
+- release candidate validation;
+- v1.0.0 release preparation.
 
 Potential post-v1 work includes:
 

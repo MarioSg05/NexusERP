@@ -1,6 +1,6 @@
 # NexusERP - Current Project State
 
-Last updated: 2026-09-03
+Last updated: 2026-09-07
 
 ## Project Status
 
@@ -36,11 +36,11 @@ Out of scope until after v1.0:
 - Branch: `develop`
 - Remote branch: `origin/develop`
 - Working tree: clean
-- Last completed issue: `ID-037 - Remove unused NexusERP.Shared project`
-- Last merged pull request: `#77`
+- Last completed issue: `ID-042 - Polish frontend branding and navigation for v1`
+- Last merged pull request: `#90`
 - Last completed milestone: `Sprint 12 - Microservices`
 - Build: passing
-- Automated tests: 166 passed
+- Automated tests: 171 passed
 - Failed tests: 0
 - Skipped tests: 0
 
@@ -241,8 +241,8 @@ Entity Framework Core
 SQL Server Testcontainers
 Real database migrations
 Current Test Baseline
-Total:   166
-Passed:  166
+Total:   171
+Passed:  177
 Failed:  0
 Skipped: 0
 Frontend

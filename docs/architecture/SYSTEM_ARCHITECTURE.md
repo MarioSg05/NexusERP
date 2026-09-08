@@ -324,8 +324,8 @@ Integration tests exercise real infrastructure using:
 Current v1 baseline:
 
 ```text
-Tests:   166
-Passed:  166
+Tests:   171
+Passed:  171
 Failed:  0
 Skipped: 0
 ```
