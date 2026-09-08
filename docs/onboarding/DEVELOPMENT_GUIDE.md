@@ -247,8 +247,8 @@ Integration tests use Testcontainers and require Docker to be available.
 Current v1 baseline:
 
 ```text
-166 tests
-166 passed
+171 tests
+171 passed
 0 failed
 0 skipped
 ```

@@ -55,13 +55,9 @@ before the v1.0.0 release.
 
 Current work is limited to release preparation:
 
-- Architecture stabilization
-- Documentation synchronization
-- Security and configuration review
-- Code and test quality review
-- Frontend release polish
-- Portfolio presentation
+- Final documentation synchronization
 - Release candidate validation
+- v1.0.0 release
 
 No new business functionality is planned during this phase.
 
