@@ -27,9 +27,31 @@ public static class DependencyInjection
 
         services.AddInfrastructureHealthChecks();
 
-        services.Configure<JwtSettings>(
-            configuration.GetSection(
-                JwtSettings.SectionName));
+        services
+            .AddOptions<JwtSettings>()
+            .Bind(
+                configuration.GetSection(
+                    JwtSettings.SectionName))
+            .Validate(
+                settings =>
+                    !string.IsNullOrWhiteSpace(
+                        settings.Key),
+                "JWT signing key is required.")
+            .Validate(
+                settings =>
+                    !string.IsNullOrWhiteSpace(
+                        settings.Issuer),
+                "JWT issuer is required.")
+            .Validate(
+                settings =>
+                    !string.IsNullOrWhiteSpace(
+                        settings.Audience),
+                "JWT audience is required.")
+            .Validate(
+                settings =>
+                    settings.ExpirationMinutes > 0,
+                "JWT expiration must be greater than zero.")
+            .ValidateOnStart();
 
         services.Configure<OllamaSettings>(
             configuration.GetSection(
