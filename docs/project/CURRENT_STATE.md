@@ -1,24 +1,24 @@
 # NexusERP - Current Project State
 
-Last updated: 2026-09-07
+Last updated: 2026-09-08
 
 ## Project Status
 
-NexusERP has entered **v1.0 Feature Freeze**.
+NexusERP **v1.0.0 has been released**.
 
-The functional scope for NexusERP v1 is considered complete.
+The v1 functional scope is stable and the project has entered
+post-release maintenance.
 
-No new business features will be introduced before v1.0.0.
+New capabilities are considered post-v1 work and should be introduced only
+when they have a clear product or engineering justification.
 
-Allowed changes during the release preparation phase:
+Allowed changes during the post-release maintenance phase:
 
 - Bug fixes
 - Security fixes
-- Test improvements
-- Documentation
-- Developer experience improvements
-- Release preparation
-- Portfolio presentation improvements
+- Documentation corrections
+- Dependency maintenance
+- Selectively evaluated post-v1 improvements
 
 Out of scope until after v1.0:
 
@@ -43,6 +43,9 @@ Out of scope until after v1.0:
 - Automated tests: 171 passed
 - Failed tests: 0
 - Skipped tests: 0
+- Current stable release: `v1.0.0`
+- Release commit: `46afe73`
+- Release pull request: `#93`
 
 ---
 
@@ -297,7 +300,7 @@ Remaining documentation work:
 - ADR coverage predates the distributed messaging architecture.
 - Portfolio screenshots and final presentation material are pending.
 
-The v1 release review must verify:
+The v1 release review verified:
 
 Architecture boundaries
 Domain model consistency
@@ -323,13 +326,12 @@ Feature Freeze.
 Changes require a concrete correctness, security, maintainability,
 documentation, or release-readiness justification.
 
-NexusERP v1 Release Goal
+## NexusERP v1 Release
 
-NexusERP v1.0.0 is intended to represent a stable portfolio-ready release
-demonstrating the design and implementation of a modern ERP platform using
-enterprise software engineering practices.
+NexusERP v1.0.0 represents the first stable, portfolio-ready release of the
+project.
 
-The release should demonstrate:
+The release demonstrates:
 
 Business-oriented domain modeling
 Maintainable application architecture
@@ -353,11 +355,8 @@ Additional observability infrastructure
 Distributed tracing
 Production deployment improvements
 
-These items are intentionally excluded from the v1 Feature Freeze.
+These items were intentionally excluded from the v1.0.0 release scope.
 
 Immediate Next Step
 
 Perform the NexusERP v1 Architecture Review.
-
-The architecture review will determine the concrete stabilization issues
-required before the v1.0.0 release candidate.
