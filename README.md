@@ -31,6 +31,28 @@ Its integration boundaries allow future service extraction if concrete business 
 
 ---
 
+## Preview
+
+### Dashboard
+
+Executive overview of products, inventory, sales, and purchasing activity.
+
+![NexusERP Dashboard](docs/assets/screenshots/dashboard.png)
+
+### Reports
+
+Operational reporting for inventory, sales, and purchasing activity.
+
+![NexusERP Reports](docs/assets/screenshots/reports.png)
+
+### AI Business Insights
+
+Deterministic ERP insights with optional locally generated AI summaries.
+
+![NexusERP AI Business Insights](docs/assets/screenshots/ai-insights.png)
+
+---
+
 ## Technology Stack
 
 ### Backend
