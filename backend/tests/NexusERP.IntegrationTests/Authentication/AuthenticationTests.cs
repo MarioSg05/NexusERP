@@ -91,6 +91,27 @@ public sealed class AuthenticationTests
     }
 
     [Fact]
+    public async Task Login_WithUnknownEmail_ShouldReturnUnauthorized()
+    {
+        var factory =
+            _sqlServer.Factory;
+
+        using var client =
+            factory.CreateClient();
+
+        using var response =
+            await client.PostAsJsonAsync(
+                "/api/auth/login",
+                new LoginUserRequest(
+                    $"unknown-{Guid.NewGuid():N}@nexuserp.test",
+                    "Password123!"));
+
+        Assert.Equal(
+            HttpStatusCode.Unauthorized,
+            response.StatusCode);
+    }
+
+    [Fact]
     public async Task Login_WithInactiveUser_ShouldReturnUnauthorized()
     {
         var factory =

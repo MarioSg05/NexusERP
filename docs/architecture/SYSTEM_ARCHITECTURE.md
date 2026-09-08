@@ -256,7 +256,7 @@ Current roles include:
 
 - Administrator
 - Manager
-- User
+- Viewer
 
 ---
 

@@ -13,15 +13,25 @@ public sealed class IntegrationTestFactory
     private readonly string?
         _rabbitMqConnectionString;
 
+    private readonly IReadOnlyDictionary<
+        string,
+        string?>?
+        _configurationOverrides;
+
     public IntegrationTestFactory(
         string connectionString,
-        string? rabbitMqConnectionString = null)
+        string? rabbitMqConnectionString = null,
+        IReadOnlyDictionary<string, string?>?
+            configurationOverrides = null)
     {
         _connectionString =
             connectionString;
 
         _rabbitMqConnectionString =
             rabbitMqConnectionString;
+
+        _configurationOverrides =
+            configurationOverrides;
     }
 
     protected override void ConfigureWebHost(
@@ -58,6 +68,17 @@ public sealed class IntegrationTestFactory
                     configuration[
                         "RabbitMq:ConnectionString"] =
                             _rabbitMqConnectionString;
+                }
+
+                if (_configurationOverrides is not null)
+                {
+                    foreach (var configurationOverride
+                        in _configurationOverrides)
+                    {
+                        configuration[
+                            configurationOverride.Key] =
+                                configurationOverride.Value;
+                    }
                 }
 
                 configurationBuilder
