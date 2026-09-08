@@ -1,10 +1,9 @@
 # NexusERP Roadmap
 
-NexusERP has completed its planned v1 functional scope and is currently
-in **v1.0 release preparation**.
+NexusERP v1.0.0 has been released.
 
-The project is under Feature Freeze. No new business modules will be added
-before the v1.0.0 release.
+The planned v1 functional scope is complete and the project is currently in
+post-release maintenance.
 
 ## Completed for v1
 
@@ -51,13 +50,12 @@ before the v1.0.0 release.
 - Publisher Confirms
 - Messaging health checks and diagnostics
 
-## Current Phase — NexusERP v1.0
+## Current Phase — Post-v1
 
-Current work is limited to release preparation:
+NexusERP v1.0.0 has been released and the v1 functional scope is stable.
 
-- Final documentation synchronization
-- Release candidate validation
-- v1.0.0 release
+Further development is focused on maintenance and selectively evaluated
+post-v1 capabilities.e
 
 No new business functionality is planned during this phase.
 
@@ -72,5 +70,5 @@ Potential future work includes:
 - Additional observability and distributed tracing
 - Production deployment improvements
 
-Post-v1 work will be prioritized only after the v1.0.0 release and should
-be driven by concrete product or operational requirements.
+Post-v1 work is prioritized only when it has clear business, portfolio,
+operational, or architectural justification.

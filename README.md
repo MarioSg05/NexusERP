@@ -4,7 +4,7 @@
 
 NexusERP is a portfolio-focused ERP project designed to demonstrate the architecture and implementation of a modern business application beyond basic CRUD operations.
 
-**Current status:** NexusERP v1.0 release preparation.
+**Current status:** NexusERP v1.0.0 is the current stable release.
 
 ---
 
@@ -343,11 +343,10 @@ Additional project documentation:
 
 The functional scope for NexusERP v1 is complete.
 
-Current work focuses on:
+NexusERP v1.0.0 has been released and the v1 functional scope is stable.
 
-- final documentation synchronization;
-- release candidate validation;
-- v1.0.0 release preparation.
+Further development is focused on maintenance and selectively evaluated
+post-v1 capabilities.
 
 Potential post-v1 work includes:
 
