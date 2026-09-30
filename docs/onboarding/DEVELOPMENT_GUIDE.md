@@ -134,6 +134,85 @@ dotnet ef database update --project src/NexusERP.Infrastructure --startup-projec
 
 This creates or updates the local `NexusERPDb` database.
 
+### 3.1. Create the Initial Administrator
+
+After applying database migrations, initialize the first administrator
+before signing in.
+
+Run the following commands from the repository root. Replace the example
+values with your local development details:
+
+```cmd
+dotnet user-secrets set "BootstrapAdmin:FirstName" "Demo" --project backend/src/NexusERP.Api
+dotnet user-secrets set "BootstrapAdmin:LastName" "Administrator" --project backend/src/NexusERP.Api
+dotnet user-secrets set "BootstrapAdmin:Email" "admin@nexuserp.test" --project backend/src/NexusERP.Api
+dotnet user-secrets set "BootstrapAdmin:Password" "REPLACE_WITH_YOUR_LOCAL_PASSWORD" --project backend/src/NexusERP.Api
+```
+
+Use a dedicated local password with at least 8 characters.
+User Secrets are stored outside the repository but are not encrypted.
+Do not commit credentials.
+
+Ensure SQL Server is running and the API connection string points to
+the intended local database. Then run:
+
+```cmd
+dotnet run --project backend/src/NexusERP.Api --no-launch-profile -- --environment Development --bootstrap-admin
+```
+
+The command:
+
+- Runs only in the Development environment.
+- Uses the API's configured database connection.
+- Creates an active Administrator using the existing registration
+  validation and password hashing.
+- Makes no changes if any Administrator already exists, including
+  an inactive one.
+- Rejects an email already assigned to another user without changing
+  that user's role.
+- Exits without starting the HTTP server.
+
+Successful creation prints:
+
+```text
+The initial administrator was created successfully.
+```
+
+If an administrator already exists, it prints:
+
+```text
+An administrator already exists. No changes were made.
+```
+
+Both outcomes return exit code `0`. Initialization errors and attempts
+outside Development return exit code `1`.
+
+You can now start the API and frontend and sign in with the credentials
+you configured. User registration through the HTTP API remains protected
+by the existing administrator authorization policy.
+
+After successful initialization, remove the bootstrap password from
+User Secrets:
+
+```cmd
+dotnet user-secrets remove "BootstrapAdmin:Password" --project backend/src/NexusERP.Api
+```
+
+Removing this configuration value does not change the created user's
+password.
+
+#### Troubleshooting
+
+- **Connection failure:** verify that SQL Server is ready, the configured
+  port is correct, and the connection credentials are valid.
+- **Missing tables:** apply migrations to the configured database first.
+- **Invalid configuration:** check all four `BootstrapAdmin` settings
+  and the registration validation messages.
+- **Email already registered:** use an unused email address. The command
+  does not promote existing users.
+- **Existing inactive administrator:** use a separate account recovery
+  procedure; this command does not reactivate accounts.
+
 ## 4. Run the API
 
 From `backend`:
