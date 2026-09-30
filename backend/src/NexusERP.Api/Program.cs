@@ -21,8 +21,17 @@ using NexusERP.Api.Endpoints.Sales;
 using NexusERP.Api.Endpoints.Reports;
 using NexusERP.Api.Endpoints.Dashboard;
 using NexusERP.Api.Endpoints.AI;
+using NexusERP.Api.Commands;
 
-var builder = WebApplication.CreateBuilder(args);
+var bootstrapAdminRequested = args.Contains(
+    "--bootstrap-admin",
+    StringComparer.Ordinal);
+
+var hostArgs = args
+    .Where(argument => argument != "--bootstrap-admin")
+    .ToArray();
+
+var builder = WebApplication.CreateBuilder(hostArgs);
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -130,6 +139,56 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+if (bootstrapAdminRequested)
+{
+    try
+    {
+        if (!app.Environment.IsDevelopment())
+        {
+            Console.Error.WriteLine(
+                "Administrator initialization is only allowed in Development.");
+
+            Environment.ExitCode = 1;
+            return;
+        }
+
+        await BootstrapAdminCommand.ExecuteAsync(
+            app.Services,
+            app.Configuration);
+    }
+    catch (FluentValidation.ValidationException exception)
+    {
+        Console.Error.WriteLine(
+            "Administrator configuration is invalid:");
+
+        foreach (var error in exception.Errors)
+        {
+            Console.Error.WriteLine(
+                $"- {error.PropertyName}: {error.ErrorMessage}");
+        }
+
+        Environment.ExitCode = 1;
+    }
+    catch (Exception exception)
+    {
+        // Do not print configuration values or credentials.
+        Console.Error.WriteLine(
+            $"Administrator initialization failed ({exception.GetType().Name}).");
+
+        Console.Error.WriteLine(
+            "Check local configuration, database access, migrations, " +
+            "and whether the email is already registered.");
+
+        Environment.ExitCode = 1;
+    }
+    finally
+    {
+        await app.DisposeAsync();
+    }
+
+    return;
+}
 
 // Health
 app.MapHealthChecks(
