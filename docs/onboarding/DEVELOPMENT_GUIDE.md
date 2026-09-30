@@ -252,8 +252,38 @@ From the repository root:
 ```cmd
 cd frontend
 npm install
+```
+
+Before starting the frontend, create your local configuration:
+
+```cmd
+if not exist .env.local copy .env.example .env.local
+```
+
+Ensure `.env.local` contains the URL of your backend API, including `/api`:
+
+```dotenv
+VITE_API_BASE_URL=http://localhost:5012/api
+```
+
+Then start the development server:
+
+```cmd
 npm run dev
 ```
+
+Restart the development server after changing environment variables.
+
+`.env.example` is committed as a configuration template.
+`.env.local` is ignored by Git.
+
+Variables prefixed with `VITE_` are exposed to the browser. Never store
+passwords, signing keys, or other secrets in them.
+
+For deployment, configure `VITE_API_BASE_URL` before running
+`npm run build`. The value is included in the generated frontend bundle;
+changing it requires rebuilding the frontend. The API must also allow
+the deployed frontend origin in its CORS configuration.
 
 The Vite development server normally runs at:
 
