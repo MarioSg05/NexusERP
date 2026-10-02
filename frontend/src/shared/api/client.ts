@@ -7,8 +7,16 @@ import {
 
 import { notifyUnauthorized } from "../../features/auth/services/authEvents";
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+
+if (!apiBaseUrl) {
+  throw new Error(
+    "Missing VITE_API_BASE_URL. Configure it in frontend/.env.local.",
+  );
+}
+
 export const apiClient = axios.create({
-  baseURL: "http://localhost:5012/api",
+  baseURL: apiBaseUrl,
 
   headers: {
     "Content-Type": "application/json",

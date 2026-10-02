@@ -403,4 +403,5 @@ Contribution guidelines are available in:
 
 ## License
 
-See [LICENSE](LICENSE).
+This project is presented for portfolio review and is not open source.
+All rights reserved. See [LICENSE](LICENSE) for details.
